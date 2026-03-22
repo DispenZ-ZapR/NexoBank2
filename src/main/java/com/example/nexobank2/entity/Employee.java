@@ -1,5 +1,6 @@
 package com.example.nexobank2.entity;
 
+import com.example.nexobank2.enums.EmployeeStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,17 +9,14 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "employee")
-public class Employee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class Employee extends BaseEntity{
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -31,13 +29,14 @@ public class Employee {
 
     @NotNull
     @Column(name = "hired_at", nullable = false)
-    private OffsetDateTime hiredAt;
+    private LocalDateTime hiredAt;
 
     @Size(max = 15)
     @NotNull
     @ColumnDefault("'ACTIVE'")
     @Column(name = "employee_status", nullable = false, length = 15)
-    private String employeeStatus;
+    @Enumerated(EnumType.STRING)
+    private EmployeeStatus employeeStatus;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

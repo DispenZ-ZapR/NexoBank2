@@ -13,12 +13,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "passport")
-public class Passport {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
+public class Passport extends BaseEntity{
     @Size(max = 15)
     @NotNull
     @Column(name = "first_name", nullable = false, length = 15)

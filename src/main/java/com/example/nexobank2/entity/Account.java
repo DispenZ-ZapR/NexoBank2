@@ -1,5 +1,6 @@
 package com.example.nexobank2.entity;
 
+import com.example.nexobank2.enums.AccountStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -14,12 +15,7 @@ import java.time.OffsetDateTime;
 @Setter
 @Entity
 @Table(name = "account")
-public class Account {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
+public class Account extends BaseEntity{
     @NotNull
     @ColumnDefault("now()")
     @Column(name = "date_created", nullable = false)
@@ -48,6 +44,7 @@ public class Account {
     @Size(max = 255)
     @NotNull
     @Column(name = "status", nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private AccountStatus status;
 
 }

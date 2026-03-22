@@ -1,5 +1,6 @@
 package com.example.nexobank2.entity;
 
+import com.example.nexobank2.enums.TransactionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -7,18 +8,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "transaction")
-public class Transaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
+public class Transaction extends BaseEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
@@ -26,12 +23,13 @@ public class Transaction {
 
     @NotNull
     @Column(name = "transaction_date", nullable = false)
-    private OffsetDateTime transactionDate;
+    private LocalDateTime transactionDate;
 
     @Size(max = 255)
     @NotNull
     @Column(name = "transaction_type", nullable = false)
-    private String transactionType;
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

@@ -10,11 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "account_currency")
-public class AccountCurrency {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class AccountCurrency extends BaseEntity {
 
     @NotNull
     @Column(name = "code", nullable = false)
