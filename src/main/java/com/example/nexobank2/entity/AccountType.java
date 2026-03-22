@@ -10,12 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "account_type")
-public class AccountType {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
+public class AccountType extends  BaseEntity {
     @Size(max = 20)
     @NotNull
     @Column(name = "name", nullable = false, length = 20)
