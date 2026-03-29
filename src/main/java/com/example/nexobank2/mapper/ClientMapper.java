@@ -3,12 +3,12 @@ package com.example.nexobank2.mapper;
 import com.example.nexobank2.dto.ClientRequest;
 import com.example.nexobank2.dto.ClientResponse;
 import com.example.nexobank2.entity.Client;
-import com.example.nexobank2.service.AccountService;
-import com.example.nexobank2.service.UserService;
+import com.example.nexobank2.service.impl.AccountService;
+import com.example.nexobank2.service.impl.UserServiceImpl;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {UserService.class, AccountService.class})
+@Mapper(componentModel = "spring", uses = {UserServiceImpl.class, AccountService.class})
 public interface ClientMapper {
     @Mapping(target = "user", source = "userId", qualifiedByName = "findById")
     @Mapping(target = "creditRating",source = "creditRating")
