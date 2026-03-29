@@ -19,7 +19,7 @@ import java.time.OffsetDateTime;
 public class Employee extends BaseEntity{
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "position_id", nullable = false)
     private EmployeePosition position;
 
