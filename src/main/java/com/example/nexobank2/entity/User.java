@@ -36,11 +36,6 @@ public class User extends BaseEntity{
     @NotNull
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
-    @NotNull
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive = false;
-
     @Size(max = 20)
     @NotNull
     @Column(name = "phone_number", nullable = false, length = 20)
