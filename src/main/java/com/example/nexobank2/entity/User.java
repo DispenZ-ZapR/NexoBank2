@@ -20,9 +20,7 @@ public class User extends BaseEntity{
     @JoinColumn(name = "passport_id", nullable = false)
     private Passport passport;
 
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "password_hash", nullable = false)
+    @Size(max = 255) @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
     @Size(max = 35)
