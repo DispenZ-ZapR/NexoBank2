@@ -32,7 +32,7 @@ public class User extends BaseEntity{
 
     @Size(max = 20)
     @NotNull
-    @Column(name = "user_type", nullable = false, length = 20)
+    @Column(name = "user_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
