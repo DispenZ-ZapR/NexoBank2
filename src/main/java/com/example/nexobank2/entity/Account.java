@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class Account extends BaseEntity{
     @NotNull
     @ColumnDefault("now()")
     @Column(name = "date_created", nullable = false)
-    private OffsetDateTime dateCreated;
+    private LocalDateTime dateCreated;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
