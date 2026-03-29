@@ -50,6 +50,14 @@ public class User extends BaseEntity{
     private String phoneNumber;
 
     @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    private LocalDateTime deletedAt = null;
 
+    @Column(name = "ac_token")
+    private String acToken;
+
+    @Column(name = "activation_token_expires_at")
+    private LocalDateTime activationTokenExpiresAt;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Client client;
 }
