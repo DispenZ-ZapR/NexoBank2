@@ -2,6 +2,7 @@ package com.example.nexobank2.mapper;
 
 import com.example.nexobank2.dto.PassportRequest;
 import com.example.nexobank2.dto.PassportResponse;
+import com.example.nexobank2.dto.UserRequest;
 import com.example.nexobank2.entity.Passport;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
