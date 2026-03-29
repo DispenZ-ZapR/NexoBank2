@@ -1,4 +1,4 @@
-package com.example.nexobank2.service;
+package com.example.nexobank2.service.impl;
 
 import com.example.nexobank2.entity.EmployeePosition;
 import com.example.nexobank2.repository.EmployeePositionRepository;
