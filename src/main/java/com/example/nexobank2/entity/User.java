@@ -28,7 +28,6 @@ public class User extends BaseEntity{
     @Column(name = "email", nullable = false, length = 35)
     private String email;
 
-    @Size(max = 20)
     @NotNull
     @Column(name = "user_type", nullable = false)
     @Enumerated(EnumType.STRING)
