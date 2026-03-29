@@ -16,7 +16,7 @@ import java.time.OffsetDateTime;
 @Table(name = "users")
 public class User extends BaseEntity{
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "passport_id", nullable = false)
     private Passport passport;
 
