@@ -11,7 +11,6 @@ import java.time.LocalDate;
 public class UserRequest {
     private String email;
     private String phoneNumber;
-    private UserType userType;
     // данные паспорта
     private String firstName;
     private String lastName;
