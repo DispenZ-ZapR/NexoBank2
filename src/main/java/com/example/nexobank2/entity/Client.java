@@ -1,5 +1,6 @@
 package com.example.nexobank2.entity;
 
+import com.example.nexobank2.enums.ClientStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
