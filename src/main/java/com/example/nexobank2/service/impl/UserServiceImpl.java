@@ -57,8 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteById(Long id) {
-       User user = findById(id);
+    public void delete(User user) {
        user.setDeletedAt(LocalDateTime.now());
        userRepository.save(user);
     }
