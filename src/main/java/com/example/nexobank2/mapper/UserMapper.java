@@ -18,7 +18,6 @@ public interface UserMapper {
     @Mapping(source = "dateOfBirth", target = "passport.dateOfBirth")
     @Mapping(source = "personalNumber",target = "passport.personalNumber")
     @Mapping(source = "passportNumber",target = "passport.passportNumber")
-    @Mapping(source = "userType", target = "userType")
     User toEntity(UserRequest userRequest);
     @Mapping(source = "passport.firstName", target = "firstName")
     @Mapping(source = "passport.lastName", target = "lastName")
