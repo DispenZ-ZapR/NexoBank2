@@ -5,7 +5,7 @@ import com.example.nexobank2.enums.UserType;
 
 import java.util.List;
 
-public interface UserService extends BaseService<User>{
+public interface UserService{
     User findByEmail(String email);
     List<User> findByUsersType(UserType UserType);
     User findByPassportId(Long passportId);
