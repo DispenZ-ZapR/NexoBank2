@@ -1,5 +1,6 @@
 package com.example.nexobank2.dto;
 
+import com.example.nexobank2.enums.ClientStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,5 +14,6 @@ public class ClientResponse {
     private LocalDateTime createdAt;
     private Integer creditRating;
     private Long accountId;
+    private ClientStatus clientStatus;
 }
 
