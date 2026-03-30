@@ -31,8 +31,8 @@ public class UserController {
         userService.activateAccount(password.password(), token);
         return ResponseEntity.ok("Аккаунт успешно подтвержден");
     }
-    @GetMapping("/getById")
-    public ResponseEntity<UserResponse> getById(Long id){
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<UserResponse> getById(@PathVariable Long id){
         return ResponseEntity.ok(userMapper.toResponse(userService.findById(id)));
     }
     @GetMapping("/all")
@@ -43,8 +43,8 @@ public class UserController {
     public ResponseEntity<UserResponse> getByEmail(@RequestParam String email){
         return ResponseEntity.ok(userMapper.toResponse(userService.findByEmail(email)));
     }
-    @GetMapping("/getByPassportId")
-    public ResponseEntity<UserResponse> getByPassportId(@RequestParam Long passportId){
+    @GetMapping("/getByPassportId/{passportId}")
+    public ResponseEntity<UserResponse> getByPassportId(@PathVariable Long passportId){
         return ResponseEntity.ok(userMapper.toResponse(userService.findByPassportId(passportId)));
     }
     @GetMapping("/getByPhoneNumber")
@@ -55,8 +55,8 @@ public class UserController {
     public ResponseEntity<List<UserResponse>> getByUserType(@RequestParam UserType userType){
         return ResponseEntity.ok(userMapper.toUserResponseList(userService.findByUsersType(userType)));
     }
-    @PutMapping("/changeEmail")
-    public ResponseEntity<?> changeEmail(@RequestParam Long id, @RequestBody UpdateEmail email){
+    @PutMapping("/changeEmail/{id}")
+    public ResponseEntity<?> changeEmail(@PathVariable Long id, @RequestBody UpdateEmail email){
         userService.changeEmail(id, email.email());
         return ResponseEntity.ok("Почта успешно изменена");
     }
