@@ -13,4 +13,8 @@ public interface UserService{
     void changeEmail(Long userId,String email);
     void changePhoneNumber(Long userId,String phoneNumber);
     void activateAccount(String password, String token);
+    User save(User entity);
+    void delete(User id);
+    User findById(Long id);
+    List<User> findAll();
 }
