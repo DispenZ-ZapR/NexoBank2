@@ -26,11 +26,6 @@ import java.util.List;
 public class UserController {
     private final UserServiceImpl userService;
     private final UserMapper userMapper;
-
-    @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody UserRequest userRequest){
-        return ResponseEntity.ok(userMapper.toResponse(userService.save(userMapper.toEntity(userRequest))));
-    }
     @PostMapping("/verify/{token}")
     public ResponseEntity<?> activateAccount(@PathVariable String token, @RequestBody ActivationAccount password){
         userService.activateAccount(password.password(), token);
