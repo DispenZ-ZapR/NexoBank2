@@ -3,14 +3,14 @@ package com.example.nexobank2.mapper;
 import com.example.nexobank2.dto.UserRequest;
 import com.example.nexobank2.dto.UserResponse;
 import com.example.nexobank2.entity.User;
-import com.example.nexobank2.service.impl.PassportService;
+import com.example.nexobank2.service.impl.PassportServiceImpl;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
 import java.util.List;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = PassportService.class)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = PassportServiceImpl.class)
 public interface UserMapper {
     @Mapping(source = "firstName", target = "passport.firstName")
     @Mapping(source = "lastName", target = "passport.lastName")
