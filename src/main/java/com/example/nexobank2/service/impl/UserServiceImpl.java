@@ -39,10 +39,7 @@ public class UserServiceImpl implements UserService {
         user.setPasswordHash(null);
         user.setCreatedAt(LocalDateTime.now());
         user.setActivationTokenExpiresAt(LocalDateTime.now().plusHours(72));
-        String link = "http://localhost:8080/api/user/verify/" + user.getAcToken();
-        emailService.sendSimpleMessage(user.getEmail(),"Подтверждение аккаунта",
-                "Для активации аккаунта перейдите по ссылке и установите пароль: " + link + 
-                "\n\nПосле перехода по ссылке вам будет предложено установить пароль для входа в систему.");
+
         return userRepository.save(user);
 
     }
