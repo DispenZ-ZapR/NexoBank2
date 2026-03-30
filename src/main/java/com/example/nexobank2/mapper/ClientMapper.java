@@ -8,15 +8,21 @@ import com.example.nexobank2.service.impl.UserServiceImpl;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", uses = {UserServiceImpl.class, AccountService.class})
 public interface ClientMapper {
     @Mapping(target = "user", source = "userId", qualifiedByName = "findById")
     @Mapping(target = "creditRating",source = "creditRating")
+    @Mapping(target = "clientStatus", source = "clientStatus")
     Client toEntity(ClientRequest request);
     @Mapping(target = "id", source = "id")
     @Mapping(target = "userId",source = "user.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "creditRating", source = "creditRating")
     @Mapping(target = "accountId", source = "account.id")
+    @Mapping(target = "clientStatus", source = "clientStatus")
     ClientResponse toResponse(Client client);
+
+    List<ClientResponse> toResponseList(List<Client> clients);
 }
