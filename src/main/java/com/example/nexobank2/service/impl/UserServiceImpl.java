@@ -28,9 +28,6 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmailAndDeletedAtIsNull(entity.getEmail())){
             throw new RuntimeException("Email already exists");
         }
-        if (passportRepository.existsByPassportNumber(entity.getPassport().getPassportNumber())){
-            throw new RuntimeException("Passport already exists");
-        }
         Passport passport = entity.getPassport();
         passportRepository.save(passport);
         User user = new User();
