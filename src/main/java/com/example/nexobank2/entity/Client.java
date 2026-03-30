@@ -31,4 +31,10 @@ public class Client extends BaseEntity {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    @NotNull
+    @ColumnDefault("'ACTIVE'")
+    @Column(name = "client_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ClientStatus clientStatus;
+
 }
