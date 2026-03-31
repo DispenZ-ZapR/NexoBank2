@@ -47,4 +47,8 @@ public class Account extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
+
 }

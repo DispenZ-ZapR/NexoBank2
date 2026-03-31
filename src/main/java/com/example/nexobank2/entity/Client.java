@@ -28,9 +28,8 @@ public class Client extends BaseEntity {
     @Column(name = "credit_rating")
     private Integer creditRating;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @OneToMany(mappedBy = "client")
+    private List<Account> accounts;
 
     @NotNull
     @ColumnDefault("'ACTIVE'")
