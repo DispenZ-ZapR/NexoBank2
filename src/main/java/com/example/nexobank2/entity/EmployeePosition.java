@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -15,5 +17,8 @@ public class EmployeePosition extends BaseEntity {
     @NotNull
     @Column(name = "name", nullable = false, length = 20)
     private String name;
+
+@ManyToMany(mappedBy = "positions")
+    private Set<Employee> employees;
 
 }
