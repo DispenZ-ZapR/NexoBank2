@@ -35,10 +35,9 @@ public class Employee extends BaseEntity{
     @Column(name = "hired_at", nullable = false)
     private LocalDateTime hiredAt;
 
-    @Size(max = 15)
     @NotNull
     @ColumnDefault("'ACTIVE'")
-    @Column(name = "employee_status", nullable = false, length = 15)
+    @Column(name = "employee_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private EmployeeStatus employeeStatus;
 
