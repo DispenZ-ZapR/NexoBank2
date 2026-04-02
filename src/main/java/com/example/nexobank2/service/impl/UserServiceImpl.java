@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
         entity.setPasswordHash(null);
         entity.setActivationTokenExpiresAt(LocalDateTime.now().plusHours(72));
 
+        return userRepository.save(entity);
     }
     @Transactional
     @Override
