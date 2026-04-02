@@ -28,19 +28,10 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmailAndDeletedAtIsNull(entity.getEmail())){
             throw new RuntimeException("Email already exists");
         }
-        Passport passport = entity.getPassport();
-        passportRepository.save(passport);
-        User user = new User();
-        user.setEmail(entity.getEmail());
-        user.setUserType(entity.getUserType());
-        user.setPhoneNumber(entity.getPhoneNumber());
-        user.setPassport(passport);
-        user.setAcToken(UUID.randomUUID().toString());
-        user.setPasswordHash(null);
-        user.setCreatedAt(LocalDateTime.now());
-        user.setActivationTokenExpiresAt(LocalDateTime.now().plusHours(72));
 
-        return userRepository.save(user);
+        entity.setAcToken(UUID.randomUUID().toString());
+        entity.setPasswordHash(null);
+        entity.setActivationTokenExpiresAt(LocalDateTime.now().plusHours(72));
 
     }
 
