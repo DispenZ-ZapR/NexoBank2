@@ -3,6 +3,8 @@ package com.example.nexobank2.service.impl;
 import com.example.nexobank2.entity.BaseEntity;
 import com.example.nexobank2.entity.Passport;
 import com.example.nexobank2.entity.User;
+import com.example.nexobank2.enums.ClientStatus;
+import com.example.nexobank2.enums.EmployeeStatus;
 import com.example.nexobank2.enums.UserType;
 import com.example.nexobank2.repository.PassportRepository;
 import com.example.nexobank2.repository.UserRepository;
@@ -34,7 +36,7 @@ public class UserServiceImpl implements UserService {
         entity.setActivationTokenExpiresAt(LocalDateTime.now().plusHours(72));
 
     }
-
+    @Transactional
     @Override
     public void activateAccount(String password, String token) {
         User user = userRepository.findUsersByAcToken(token).orElseThrow(()-> new RuntimeException("Токен не действителен"));
