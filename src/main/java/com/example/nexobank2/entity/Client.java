@@ -28,10 +28,6 @@ public class Client extends BaseEntity {
     @Column(name = "credit_rating")
     private Integer creditRating;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
-    private Account account;
-
     @NotNull
     @ColumnDefault("'ACTIVE'")
     @Column(name = "client_status", nullable = false)
