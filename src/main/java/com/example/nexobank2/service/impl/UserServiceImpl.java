@@ -3,6 +3,8 @@ package com.example.nexobank2.service.impl;
 import com.example.nexobank2.entity.BaseEntity;
 import com.example.nexobank2.entity.Passport;
 import com.example.nexobank2.entity.User;
+import com.example.nexobank2.enums.ClientStatus;
+import com.example.nexobank2.enums.EmployeeStatus;
 import com.example.nexobank2.enums.UserType;
 import com.example.nexobank2.repository.PassportRepository;
 import com.example.nexobank2.repository.UserRepository;
@@ -28,22 +30,14 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmailAndDeletedAtIsNull(entity.getEmail())){
             throw new RuntimeException("Email already exists");
         }
-        Passport passport = entity.getPassport();
-        passportRepository.save(passport);
-        User user = new User();
-        user.setEmail(entity.getEmail());
-        user.setUserType(entity.getUserType());
-        user.setPhoneNumber(entity.getPhoneNumber());
-        user.setPassport(passport);
-        user.setAcToken(UUID.randomUUID().toString());
-        user.setPasswordHash(null);
-        user.setCreatedAt(LocalDateTime.now());
-        user.setActivationTokenExpiresAt(LocalDateTime.now().plusHours(72));
 
-        return userRepository.save(user);
+        entity.setAcToken(UUID.randomUUID().toString());
+        entity.setPasswordHash(null);
+        entity.setActivationTokenExpiresAt(LocalDateTime.now().plusHours(72));
 
+        return userRepository.save(entity);
     }
-
+    @Transactional
     @Override
     public void activateAccount(String password, String token) {
         User user = userRepository.findUsersByAcToken(token).orElseThrow(()-> new RuntimeException("Токен не действителен"));
@@ -53,6 +47,12 @@ public class UserServiceImpl implements UserService {
         user.setPasswordHash(password);
         user.setAcToken(null);
         user.setActivationTokenExpiresAt(null);
+        if (user.getUserType() == UserType.EMPLOYEE){
+            user.getEmployee().setEmployeeStatus(EmployeeStatus.ACTIVE);
+        }
+        if (user.getUserType() == UserType.CLIENT){
+            user.getClient().setClientStatus(ClientStatus.ACTIVE);
+        }
         userRepository.save(user);
     }
 

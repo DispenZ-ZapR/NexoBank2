@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,10 +19,13 @@ import java.time.OffsetDateTime;
 @Table(name = "employee")
 public class Employee extends BaseEntity{
 
-    @NotNull
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "position_id", nullable = false)
-    private EmployeePosition position;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "employee_positions_map",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "position_id")
+    )
+    private Set<EmployeePosition> positions;
 
     @NotNull
     @Column(name = "salary", nullable = false, precision = 19, scale = 4)
@@ -31,15 +35,14 @@ public class Employee extends BaseEntity{
     @Column(name = "hired_at", nullable = false)
     private LocalDateTime hiredAt;
 
-    @Size(max = 15)
     @NotNull
     @ColumnDefault("'ACTIVE'")
-    @Column(name = "employee_status", nullable = false, length = 15)
+    @Column(name = "employee_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private EmployeeStatus employeeStatus;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

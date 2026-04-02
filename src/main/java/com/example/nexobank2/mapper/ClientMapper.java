@@ -20,7 +20,6 @@ public interface ClientMapper {
     @Mapping(target = "userId",source = "user.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "creditRating", source = "creditRating")
-    @Mapping(target = "accountId", source = "account.id")
     @Mapping(target = "clientStatus", source = "clientStatus")
     ClientResponse toResponse(Client client);
 

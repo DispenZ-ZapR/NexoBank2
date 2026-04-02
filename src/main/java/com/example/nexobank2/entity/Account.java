@@ -47,8 +47,7 @@ public class Account extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private Client client;
-
 }

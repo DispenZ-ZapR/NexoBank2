@@ -28,9 +28,6 @@ public class Client extends BaseEntity {
     @Column(name = "credit_rating")
     private Integer creditRating;
 
-    @OneToMany(mappedBy = "client")
-    private List<Account> accounts;
-
     @NotNull
     @ColumnDefault("'ACTIVE'")
     @Column(name = "client_status", nullable = false)
