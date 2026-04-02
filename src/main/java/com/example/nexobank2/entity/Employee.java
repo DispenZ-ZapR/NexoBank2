@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,10 +19,13 @@ import java.time.OffsetDateTime;
 @Table(name = "employee")
 public class Employee extends BaseEntity{
 
-    @NotNull
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "position_id", nullable = false)
-    private EmployeePosition position;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "employee_positions_map",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "position_id")
+    )
+    private Set<EmployeePosition> positions;
 
     @NotNull
     @Column(name = "salary", nullable = false, precision = 19, scale = 4)
