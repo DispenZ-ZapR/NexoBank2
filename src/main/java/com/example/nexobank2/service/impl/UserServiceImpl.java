@@ -46,6 +46,12 @@ public class UserServiceImpl implements UserService {
         user.setPasswordHash(password);
         user.setAcToken(null);
         user.setActivationTokenExpiresAt(null);
+        if (user.getUserType() == UserType.EMPLOYEE){
+            user.getEmployee().setEmployeeStatus(EmployeeStatus.ACTIVE);
+        }
+        if (user.getUserType() == UserType.CLIENT){
+            user.getClient().setClientStatus(ClientStatus.ACTIVE);
+        }
         userRepository.save(user);
     }
 
