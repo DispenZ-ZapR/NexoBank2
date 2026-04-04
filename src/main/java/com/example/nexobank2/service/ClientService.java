@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ClientService {
     List<Client> findAll(ClientStatus status);
-    Client save(User entity);
+    Client save(Client entity);
     Client findById(Long id);
     void deleteById(Long id);
     
