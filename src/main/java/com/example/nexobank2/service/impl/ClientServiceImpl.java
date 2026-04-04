@@ -28,15 +28,15 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public Client save(User entity) {
-        passportService.save(entity.getPassport());
-        entity.setUserType(UserType.CLIENT);
-        User savedUser = userService.save(entity);
+    public Client save(Client entity) {
+        passportService.save(entity.getUser().getPassport());
+        entity.getUser().setUserType(UserType.CLIENT);
+        User savedUser = userService.save(entity.getUser());
         Client client = new Client();
         client.setUser(savedUser);
         client.setCreditRating(0);
         client.setCreatedAt(LocalDateTime.now());
-        client.setClientStatus(ClientStatus.ACTIVE);
+        client.setClientStatus(ClientStatus.UNVERIFIED);
         String link = "http://localhost:8080/api/user/verify/" + savedUser.getAcToken();
         emailService.sendSimpleMessage(savedUser.getEmail(),"Подтверждение аккаунта",
                 "Для активации аккаунта перейдите по ссылке и установите пароль: " + link +
