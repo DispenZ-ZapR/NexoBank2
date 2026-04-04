@@ -1,5 +1,6 @@
 package com.example.nexobank2.Controller;
 
+import com.example.nexobank2.dto.ClientRequest;
 import com.example.nexobank2.dto.ClientResponse;
 import com.example.nexobank2.dto.UserRequest;
 import com.example.nexobank2.entity.Client;
@@ -25,9 +26,9 @@ public class ClientController {
     private final ClientServiceImpl clientServiceImpl;
     private final UserMapper userMapper;
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody UserRequest request){
-        User user = userMapper.toEntity(request);
-        clientServiceImpl.save(user);
+    public ResponseEntity<?> save(@RequestBody ClientRequest request){
+        Client client = clientMapper.toEntity(request);
+        clientServiceImpl.save(client);
         return ResponseEntity.ok("Аккаунт создан! на вашу почту был отправлен код, пожалуйста, подтвердите аккаунт");
     }
     @GetMapping("/getAll")
