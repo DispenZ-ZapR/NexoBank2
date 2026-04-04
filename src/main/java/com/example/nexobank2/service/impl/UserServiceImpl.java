@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Email already exists");
         }
 
+        entity.setCreatedAt(LocalDateTime.now());
         entity.setAcToken(UUID.randomUUID().toString());
         entity.setPasswordHash(null);
         entity.setActivationTokenExpiresAt(LocalDateTime.now().plusHours(72));
