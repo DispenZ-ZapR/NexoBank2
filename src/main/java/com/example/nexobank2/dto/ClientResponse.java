@@ -30,7 +30,7 @@ public class ClientResponse {
     private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
     private Integer creditRating;
-    // паспортные данные разворачиваем сюда
+    // паспортные данные
     private String firstName;
     private String lastName;
     private String middleName;
