@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PassportRepository passportRepository;
     private final EmailServiceImpl emailService;
+    private final AccountServiceImpl accountService;
     @Transactional
     @Override
     public User save(User entity) {
@@ -53,6 +54,8 @@ public class UserServiceImpl implements UserService {
         }
         if (user.getUserType() == UserType.CLIENT){
             user.getClient().setClientStatus(ClientStatus.ACTIVE);
+            // Активируем счета клиента
+            accountService.activateClientAccounts(user.getClient().getId());
         }
         userRepository.save(user);
     }

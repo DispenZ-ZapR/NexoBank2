@@ -3,13 +3,13 @@ package com.example.nexobank2.mapper;
 import com.example.nexobank2.dto.TransactionRequest;
 import com.example.nexobank2.dto.TransactionResponse;
 import com.example.nexobank2.entity.Transaction;
-import com.example.nexobank2.service.impl.AccountService;
+import com.example.nexobank2.service.impl.AccountServiceImpl;
 import com.example.nexobank2.service.impl.OperationService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {AccountService.class, OperationService.class})
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {AccountServiceImpl.class, OperationService.class})
 public interface TransactionMapper {
     @Mapping(target = "account", source = "accountId", qualifiedByName = "findByIdAc")
     @Mapping(target = "operation", source = "operationId", qualifiedByName = "getByUUID")
