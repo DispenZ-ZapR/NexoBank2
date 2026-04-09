@@ -41,7 +41,6 @@ public class Account extends BaseEntity{
     @JoinColumn(name = "currency_id", nullable = false)
     private AccountCurrency currency;
 
-    @Size(max = 255)
     @NotNull
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
