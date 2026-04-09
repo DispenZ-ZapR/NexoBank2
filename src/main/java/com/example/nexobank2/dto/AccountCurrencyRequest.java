@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AccountCurrencyRequest {
-    private Integer code;
+    private String code;
     private String name;
+    private String digitalCode;
 }

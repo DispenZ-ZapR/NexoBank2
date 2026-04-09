@@ -14,11 +14,13 @@ public class AccountCurrency extends BaseEntity {
 
     @NotNull
     @Column(name = "code", nullable = false)
-    private Integer code;
+    private String code;
 
     @Size(max = 10)
     @NotNull
     @Column(name = "name", nullable = false, length = 10)
     private String name;
-
+    @NotNull
+    @Column(name = "digital_code",unique = true)
+    private String digitalCode;
 }

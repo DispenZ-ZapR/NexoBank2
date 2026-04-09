@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class AccountCurrencyResponse {
     private Long id;
-    private Integer code;
+    private String code;
     private String name;
+    private String digitalCode;
 }
