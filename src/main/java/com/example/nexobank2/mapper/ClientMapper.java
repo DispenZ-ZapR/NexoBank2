@@ -3,8 +3,6 @@ package com.example.nexobank2.mapper;
 import com.example.nexobank2.dto.ClientRequest;
 import com.example.nexobank2.dto.ClientResponse;
 import com.example.nexobank2.entity.Client;
-import com.example.nexobank2.service.impl.AccountService;
-import com.example.nexobank2.service.impl.UserServiceImpl;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

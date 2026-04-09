@@ -21,6 +21,7 @@ public class ClientServiceImpl implements ClientService {
     private final PassportServiceImpl passportService;
     private final UserServiceImpl userService;
     private final EmailServiceImpl emailService;
+    private final AccountServiceImpl accountService;
     @Override
     public List<Client> findAll(ClientStatus status) {
         return clientRepository.findByClientStatus(status);
@@ -29,7 +30,6 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public Client save(Client entity) {
-        passportService.save(entity.getUser().getPassport());
         entity.getUser().setUserType(UserType.CLIENT);
         User savedUser = userService.save(entity.getUser());
         Client client = new Client();
@@ -37,11 +37,16 @@ public class ClientServiceImpl implements ClientService {
         client.setCreditRating(0);
         client.setCreatedAt(LocalDateTime.now());
         client.setClientStatus(ClientStatus.UNVERIFIED);
+        
+        Client savedClient = clientRepository.save(client);
+        
+        accountService.createDefaultAccount(savedClient);
+        
         String link = "http://localhost:8080/api/user/verify/" + savedUser.getAcToken();
         emailService.sendSimpleMessage(savedUser.getEmail(),"Подтверждение аккаунта",
                 "Для активации аккаунта перейдите по ссылке и установите пароль: " + link +
                         "\n\nПосле перехода по ссылке вам будет предложено установить пароль для входа в систему.");
-        return clientRepository.save(client);
+        return savedClient;
 
     }
 
