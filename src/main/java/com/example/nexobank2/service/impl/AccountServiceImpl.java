@@ -99,9 +99,7 @@ public class AccountServiceImpl implements AccountService {
         
         Account fromAccount = findById(fromAccountId);
         Account toAccount = findById(toAccountId);
-        if(fromAccount == null){
-            throw new RuntimeException("Счет отправителя не найден");
-        }
+        
         if (fromAccount.getStatus() != AccountStatus.ACTIVE) {
             throw new RuntimeException("Счет отправителя не активен");
         }
