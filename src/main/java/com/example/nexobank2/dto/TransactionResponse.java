@@ -15,5 +15,4 @@ public class TransactionResponse {
     private BigDecimal amount;
     private BigDecimal transactionAfter;
     private LocalDateTime transactionDate;
-    private UUID operationId;
 }
