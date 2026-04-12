@@ -32,10 +32,9 @@ public class Operation {
     @Column(name = "channel", nullable = false, length = 20)
     private String channel;
 
-    @Size(max = 20)
     @NotNull
     @ColumnDefault("'PENDING'")
-    @Column(name = "status", nullable = false, length = 20)
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private OperationStatus status;
 
