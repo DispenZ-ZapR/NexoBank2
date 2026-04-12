@@ -4,6 +4,7 @@ import com.example.nexobank2.entity.Account;
 import com.example.nexobank2.entity.Operation;
 import com.example.nexobank2.entity.Transaction;
 import com.example.nexobank2.enums.TransactionType;
+import com.example.nexobank2.exception.NotFoundException;
 import com.example.nexobank2.repository.TransactionRepository;
 import com.example.nexobank2.service.TransactionService;
 import lombok.AllArgsConstructor;
@@ -51,7 +52,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction findById(Long id) {
-        return transactionRepository.findById(id).orElseThrow(() -> new RuntimeException("not found"));
+        return transactionRepository.findById(id).orElseThrow(() -> new NotFoundException("Транзакция не найдена"));
     }
 
     @Override

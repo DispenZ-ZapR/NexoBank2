@@ -4,6 +4,7 @@ import com.example.nexobank2.entity.Client;
 import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.ClientStatus;
 import com.example.nexobank2.enums.UserType;
+import com.example.nexobank2.exception.NotFoundException;
 import com.example.nexobank2.repository.ClientRepository;
 import com.example.nexobank2.service.ClientService;
 import lombok.AllArgsConstructor;
@@ -52,7 +53,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client findById(Long id) {
-        return clientRepository.findById(id).orElseThrow(()-> new RuntimeException("Client not found"));
+        return clientRepository.findById(id).orElseThrow(()-> new NotFoundException("Client not found"));
     }
 
     @Override

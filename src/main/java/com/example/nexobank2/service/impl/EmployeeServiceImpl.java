@@ -4,6 +4,7 @@ import com.example.nexobank2.entity.Employee;
 import com.example.nexobank2.entity.EmployeePosition;
 import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.EmployeeStatus;
+import com.example.nexobank2.exception.NotFoundException;
 import com.example.nexobank2.repository.EmployeePositionRepository;
 import com.example.nexobank2.repository.EmployeeRepository;
 import com.example.nexobank2.service.EmployeeService;
@@ -26,7 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee getByUserEmail(String email) {
-        return employeeRepository.findEmployeeByUserEmail(email).orElseThrow(() -> new RuntimeException("Employee not found"));
+        return employeeRepository.findEmployeeByUserEmail(email).orElseThrow(() -> new NotFoundException("Employee not found"));
     }
 
     @Transactional
@@ -39,7 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee getUserById(Long id) {
-        return employeeRepository.findByUserId(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+        return employeeRepository.findByUserId(id).orElseThrow(() -> new NotFoundException("Employee not found"));
     }
 
     @Override
@@ -73,7 +74,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = findById(employeeId);
         Set<EmployeePosition> newPositions = newPositionIds.stream()
                 .map(id -> positionRepository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("Позиция с ID " + id + " не найдена")))
+                        .orElseThrow(() -> new NotFoundException("Позиция с ID " + id + " не найдена")))
                 .collect(Collectors.toSet());
 
         employee.getPositions().clear();
@@ -86,7 +87,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void addEmployeePosition(Long positionId, Long employeeId) {
         Employee employee = findById(employeeId);
         EmployeePosition position = positionRepository.findById(positionId)
-                .orElseThrow(() -> new RuntimeException("Позиция не найдена"));
+                .orElseThrow(() -> new NotFoundException("Позиция не найдена"));
         
         employee.getPositions().add(position);
         employeeRepository.save(employee);
@@ -94,7 +95,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee getByPassportFirstName(String name) {
-        return employeeRepository.findByUser_Passport_FirstNameIgnoreCase(name).orElseThrow(() -> new RuntimeException("Employee not found"));
+        return employeeRepository.findByUser_Passport_FirstNameIgnoreCase(name).orElseThrow(() -> new NotFoundException("Employee not found"));
     }
 
     @Transactional
@@ -102,7 +103,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void removeEmployeePosition(Long positionId, Long employeeId) {
         Employee employee = findById(employeeId);
         EmployeePosition position = positionRepository.findById(positionId)
-                .orElseThrow(() -> new RuntimeException("Позиция не найдена"));
+                .orElseThrow(() -> new NotFoundException("Позиция не найдена"));
 
         employee.getPositions().remove(position);
         employeeRepository.save(employee);
@@ -115,7 +116,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         
         Set<EmployeePosition> validatedPositions = entity.getPositions().stream()
                 .map(position -> positionRepository.findById(position.getId())
-                        .orElseThrow(() -> new RuntimeException("Позиция с ID " + position.getId() + " не найдена")))
+                        .orElseThrow(() -> new NotFoundException("Позиция с ID " + position.getId() + " не найдена")))
                 .collect(Collectors.toSet());
         
         entity.setPositions(validatedPositions);
@@ -136,7 +137,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee findById(Long id) {
-        return employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Сотрудник не найден"));
+        return employeeRepository.findById(id).orElseThrow(() -> new NotFoundException("Сотрудник не найден"));
     }
 
     @Override

@@ -4,6 +4,9 @@ import com.example.nexobank2.entity.*;
 import com.example.nexobank2.enums.AccountRequestStatus;
 import com.example.nexobank2.enums.AccountStatus;
 import com.example.nexobank2.enums.ClientStatus;
+import com.example.nexobank2.exception.NotFoundException;
+import com.example.nexobank2.exception.RequestProcessed;
+import com.example.nexobank2.exception.UnverifiedException;
 import com.example.nexobank2.repository.AccountRequestRepository;
 import com.example.nexobank2.service.AccountRequestService;
 import lombok.AllArgsConstructor;
@@ -38,7 +41,7 @@ public class AccountRequestServiceImpl implements AccountRequestService {
     @Override
     public AccountRequest findById(Long id) {
         return accountRequestRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Заявка не найдена"));
+                .orElseThrow(() -> new NotFoundException("Счет не найден"));
     }
     
     @Override
@@ -52,7 +55,7 @@ public class AccountRequestServiceImpl implements AccountRequestService {
         Client client = clientService.findById(clientId);
         
         if (client.getClientStatus() != ClientStatus.ACTIVE) {
-            throw new RuntimeException("Клиент должен быть верифицирован для создания заявки");
+            throw new UnverifiedException("Клиент не верифицирован");
         }
         
         AccountRequest request = new AccountRequest();
@@ -90,7 +93,7 @@ public class AccountRequestServiceImpl implements AccountRequestService {
         Employee employee = employeeService.findById(employeeId);
         
         if (request.getStatus() != AccountRequestStatus.PENDING) {
-            throw new RuntimeException("Заявка уже обработана");
+            throw new RequestProcessed("Заявка уже обработана");
         }
         
         // Создаем счет
@@ -129,7 +132,7 @@ public class AccountRequestServiceImpl implements AccountRequestService {
         Employee employee = employeeService.findById(employeeId);
         
         if (request.getStatus() != AccountRequestStatus.PENDING) {
-            throw new RuntimeException("Заявка уже обработана");
+            throw new RequestProcessed("Заявка уже обработана");
         }
         
         request.setStatus(AccountRequestStatus.REJECTED);
@@ -175,6 +178,6 @@ public class AccountRequestServiceImpl implements AccountRequestService {
     
     // Генерация номера счета
     private String generateAccountNumber() {
-        return "KZ" + System.currentTimeMillis() + (int)(Math.random() * 1000);
+        return "KG" + System.currentTimeMillis() + (int)(Math.random() * 1000);
     }
 }

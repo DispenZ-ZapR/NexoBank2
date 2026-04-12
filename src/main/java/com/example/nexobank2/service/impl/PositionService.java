@@ -2,6 +2,7 @@ package com.example.nexobank2.service.impl;
 
 import com.example.nexobank2.entity.BaseEntity;
 import com.example.nexobank2.entity.EmployeePosition;
+import com.example.nexobank2.exception.NotFoundException;
 import com.example.nexobank2.repository.EmployeePositionRepository;
 import com.example.nexobank2.service.EmployeePositionService;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class PositionService implements EmployeePositionService  {
     @Override
     @Named("findByIdP")
     public EmployeePosition findById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Position not found"));
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Position not found"));
     }
 
     @Override

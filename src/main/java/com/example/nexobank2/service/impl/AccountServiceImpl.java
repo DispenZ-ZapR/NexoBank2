@@ -6,6 +6,9 @@ import com.example.nexobank2.entity.AccountRequest;
 import com.example.nexobank2.entity.AccountType;
 import com.example.nexobank2.entity.Client;
 import com.example.nexobank2.enums.AccountStatus;
+import com.example.nexobank2.exception.BadRequestException;
+import com.example.nexobank2.exception.BaseException;
+import com.example.nexobank2.exception.NotFoundException;
 import com.example.nexobank2.repository.AccountCurrencyRepository;
 import com.example.nexobank2.repository.AccountRepository;
 import com.example.nexobank2.repository.AccountRequestRepository;
@@ -35,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Named("findByIdAc")
     public Account findById(Long id) {
-        return accountRepository.findById(id).orElseThrow(()-> new RuntimeException("not found"));
+        return accountRepository.findById(id).orElseThrow(()-> new NotFoundException("Счет не найден"));
     }
 
     @Override
@@ -57,17 +60,17 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account findByAccountNumber(String accountNumber) {
-        return accountRepository.findByAccountNumber(accountNumber).orElseThrow(()-> new RuntimeException("not found"));
+        return accountRepository.findByAccountNumber(accountNumber).orElseThrow(()-> new NotFoundException("Счет не найден"));
     }
 
     @Override
     public List<Account> findByStatus(AccountStatus status) {
-        return accountRepository.findByStatus(status).orElseThrow(() -> new RuntimeException("not found"));
+        return accountRepository.findByStatus(status).orElseThrow(() -> new NotFoundException("Счета не найдены"));
     }
 
     @Override
     public List<Account> findByClientIdAndStatus(Long clientId, AccountStatus status) {
-        return accountRepository.findByClientIdAndStatus(clientId, status).orElseThrow(() -> new RuntimeException("not found"));
+        return accountRepository.findByClientIdAndStatus(clientId, status).orElseThrow(() -> new NotFoundException("Счета не найдены"));
     }
 
     @Override
@@ -94,20 +97,20 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public void transfer(Long fromAccountId, Long toAccountId, BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("Сумма должна быть больше 0");
+            throw new BadRequestException("Сумма должна быть больше 0");
         }
         
         Account fromAccount = findById(fromAccountId);
         Account toAccount = findById(toAccountId);
         
         if (fromAccount.getStatus() != AccountStatus.ACTIVE) {
-            throw new RuntimeException("Счет отправителя не активен");
+            throw new BadRequestException("Счет отправителя не активен");
         }
         if (toAccount.getStatus() != AccountStatus.ACTIVE) {
-            throw new RuntimeException("Счет получателя не активен");
+            throw new BadRequestException("Счет получателя не активен");
         }
         if (fromAccount.getBalance().compareTo(amount) < 0) {
-            throw new RuntimeException("Недостаточно средств");
+            throw new BadRequestException("Недостаточно средств");
         }
         
         fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
@@ -142,10 +145,10 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public Account createDefaultAccount(Client client) {
         AccountType defaultType = accountTypeRepository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("Базовый тип счета не найден"));
+                .orElseThrow(() -> new NotFoundException("Базовый тип счета не найден"));
         
         AccountCurrency defaultCurrency = accountCurrencyRepository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("Базовая валюта не найдена"));
+                .orElseThrow(() -> new NotFoundException("Базовая валюта не найдена"));
         
         Account account = new Account();
         account.setClient(client);

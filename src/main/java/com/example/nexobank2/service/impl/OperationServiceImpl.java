@@ -7,6 +7,9 @@ import com.example.nexobank2.entity.Transaction;
 import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.OperationStatus;
 import com.example.nexobank2.enums.TransactionType;
+import com.example.nexobank2.exception.BadRequestException;
+import com.example.nexobank2.exception.NotFoundException;
+import com.example.nexobank2.exception.ServerErrorException;
 import com.example.nexobank2.repository.AccountRepository;
 import com.example.nexobank2.repository.OperationRepository;
 import com.example.nexobank2.repository.TransactionRepository;
@@ -34,7 +37,7 @@ public class OperationServiceImpl implements OperationService {
     @Named("getByUUID")
     @Override
     public Operation getByUUID(UUID uuid){
-        return operationRepository.findById(uuid).orElseThrow(()-> new RuntimeException("Operation not found"));
+        return operationRepository.findById(uuid).orElseThrow(()-> new NotFoundException("Operation not found"));
     }
 
     @Override
@@ -42,13 +45,13 @@ public class OperationServiceImpl implements OperationService {
     public Operation transfer(TransactionRequest request, User initiator) {
         // 2. Проверяем что счета существуют
         Account fromAccount = accountRepository.findById(request.getFromAccountId())
-                .orElseThrow(() -> new RuntimeException("Счёт отправителя не найден"));
+                .orElseThrow(() -> new NotFoundException("Счёт отправителя не найден"));
         Account toAccount = accountRepository.findById(request.getToAccountId())
-                .orElseThrow(() -> new RuntimeException("Счёт получателя не найден"));
+                .orElseThrow(() -> new NotFoundException("Счёт получателя не найден"));
 
         // 3. Проверяем что счёт принадлежит клиенту
         if (!fromAccount.getClient().getUser().getId().equals(initiator.getId())) {
-            throw new RuntimeException("Счёт не принадлежит пользователю");
+            throw new BadRequestException("Счёт не принадлежит пользователю");
         }
 
         // 5. Создаём Operation со статусом PENDING
@@ -80,7 +83,7 @@ public class OperationServiceImpl implements OperationService {
             // 9. Если что-то упало → статус FAILED, откат транзакции
             operation.setStatus(OperationStatus.FAILED);
             operationRepository.save(operation);
-            throw new RuntimeException("Ошибка при выполнении перевода: " + e.getMessage());
+            throw new ServerErrorException("Ошибка при выполнении перевода: " + e.getMessage());
         }
     }
 
@@ -95,7 +98,7 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public List<Operation> findByInitiatorId(Long id) {
-        return operationRepository.findByInitiatorId(id).orElseThrow(() -> new RuntimeException("operation not found"));
+        return operationRepository.findByInitiatorId(id).orElseThrow(() -> new NotFoundException("operation not found"));
     }
 
     @Override

@@ -6,6 +6,10 @@ import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.ClientStatus;
 import com.example.nexobank2.enums.EmployeeStatus;
 import com.example.nexobank2.enums.UserType;
+import com.example.nexobank2.exception.AlreadyExistsException;
+import com.example.nexobank2.exception.BadRequestException;
+import com.example.nexobank2.exception.NotFoundException;
+import com.example.nexobank2.exception.TokenExpiredException;
 import com.example.nexobank2.repository.PassportRepository;
 import com.example.nexobank2.repository.UserRepository;
 import com.example.nexobank2.service.UserService;
@@ -29,7 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User entity) {
         if (userRepository.existsByEmailAndDeletedAtIsNull(entity.getEmail())){
-            throw new RuntimeException("Email already exists");
+            throw new AlreadyExistsException("Email already exists");
         }
 
         entity.setCreatedAt(LocalDateTime.now());
@@ -42,9 +46,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void activateAccount(String password, String token) {
-        User user = userRepository.findUsersByAcToken(token).orElseThrow(()-> new RuntimeException("Токен не действителен"));
+        User user = userRepository.findUsersByAcToken(token).orElseThrow(()-> new BadRequestException("Токен не действителен"));
         if (user.getActivationTokenExpiresAt().isBefore(LocalDateTime.now())){
-            throw new RuntimeException("Срок действия токена истек");
+            throw new TokenExpiredException("Срок действия токена истек");
         }
         user.setPasswordHash(password);
         user.setAcToken(null);
@@ -73,40 +77,40 @@ public class UserServiceImpl implements UserService {
 
     @Named("findById")
     public User findById(Long id){
-        return userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
+        return userRepository.findById(id).orElseThrow(()-> new NotFoundException("Пользователь не найден"));
     }
 
     @Override
     public void changePhoneNumber(Long userId, String phoneNumber) {
-        User user =userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found"));
+        User user =userRepository.findById(userId).orElseThrow(()-> new NotFoundException("Пользователь не найден"));
         user.setPhoneNumber(phoneNumber);
         userRepository.save(user);
     }
 
     @Override
     public void changeEmail(Long userId, String email) {
-        User user =userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found"));
+        User user =userRepository.findById(userId).orElseThrow(()-> new NotFoundException("Пользователь не найден"));
         user.setEmail(email);
         userRepository.save(user);
     }
 
     @Override
     public User findByPhoneNumber(String phoneNumber) {
-        return userRepository.findUsersByPhoneNumber(phoneNumber).orElseThrow(()-> new RuntimeException("User not found"));
+        return userRepository.findUsersByPhoneNumber(phoneNumber).orElseThrow(()-> new NotFoundException("Пользователь не найден"));
     }
 
     @Override
     public User findByPassportId(Long passportId) {
-        return userRepository.findUsersByPassportId(passportId).orElseThrow(()-> new RuntimeException("User not found"));
+        return userRepository.findUsersByPassportId(passportId).orElseThrow(()-> new NotFoundException("Пользователь не найден"));
     }
 
     @Override
     public List<User> findByUsersType(UserType userType) {
-        return userRepository.findUsersByUserType(userType).orElseThrow(()-> new RuntimeException("Users not found"));
+        return userRepository.findUsersByUserType(userType).orElseThrow(()-> new NotFoundException("Пользователи не найдены"));
     }
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findUserByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        return userRepository.findUserByEmail(email).orElseThrow(()-> new NotFoundException("Пользователь не найден"));
     }
 }
