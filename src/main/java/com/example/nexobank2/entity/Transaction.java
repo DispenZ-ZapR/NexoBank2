@@ -25,7 +25,6 @@ public class Transaction extends BaseEntity {
     @Column(name = "transaction_date", nullable = false)
     private LocalDateTime transactionDate;
 
-    @Size(max = 255)
     @NotNull
     @Column(name = "transaction_type", nullable = false)
     @Enumerated(EnumType.STRING)
