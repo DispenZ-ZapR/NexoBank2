@@ -9,8 +9,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class TransactionRequest {
-    private Long accountId;
-    private String transactionType;
+    private Long fromAccountId;  // счёт откуда
+    private Long toAccountId;    // счёт куда
     private BigDecimal amount;
-    private UUID operationId;
+    private String reason;
 }
