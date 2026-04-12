@@ -96,16 +96,6 @@ public class AccountController {
         return ResponseEntity.ok().build();
     }
     
-    @PostMapping("/transfer")
-    @Operation(summary = "Перевод между счетами")
-    public ResponseEntity<Void> transfer(
-            @RequestParam Long fromAccountId,
-            @RequestParam Long toAccountId,
-            @RequestParam BigDecimal amount) {
-        accountService.transfer(fromAccountId, toAccountId, amount);
-        return ResponseEntity.ok().build();
-    }
-    
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить счет (заблокировать)")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
