@@ -12,8 +12,13 @@ import com.example.nexobank2.mapper.UserMapper;
 import com.example.nexobank2.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,16 +27,17 @@ import java.util.List;
 @RequestMapping("/api/user")
 @AllArgsConstructor
 @Tag(name = "Контроллер пользователей")
+@Validated
 public class UserController {
     private final UserServiceImpl userService;
     private final UserMapper userMapper;
     @PostMapping("/verify/{token}")
-    public ResponseEntity<?> activateAccount(@PathVariable String token, @RequestBody ActivationAccount password){
+    public ResponseEntity<?> activateAccount(@PathVariable String token, @RequestBody @Valid ActivationAccount password){
         userService.activateAccount(password.password(), token);
         return ResponseEntity.ok("Аккаунт успешно подтвержден");
     }
     @GetMapping("/getById/{id}")
-    public ResponseEntity<UserResponse> getById(@PathVariable Long id){
+    public ResponseEntity<UserResponse> getById(@PathVariable @Min(1) Long id){
         return ResponseEntity.ok(userMapper.toResponse(userService.findById(id)));
     }
     @GetMapping("/all")
@@ -39,28 +45,28 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toUserResponseList(userService.findAll()));
     }
     @GetMapping("/getByEmail")
-    public ResponseEntity<UserResponse> getByEmail(@RequestParam String email){
+    public ResponseEntity<UserResponse> getByEmail(@RequestParam @NotBlank String email){
         return ResponseEntity.ok(userMapper.toResponse(userService.findByEmail(email)));
     }
     @GetMapping("/getByPassportId/{passportId}")
-    public ResponseEntity<UserResponse> getByPassportId(@PathVariable Long passportId){
+    public ResponseEntity<UserResponse> getByPassportId(@PathVariable @Min(1) Long passportId){
         return ResponseEntity.ok(userMapper.toResponse(userService.findByPassportId(passportId)));
     }
     @GetMapping("/getByPhoneNumber")
-    public ResponseEntity<UserResponse> getByPhoneNumber(@RequestParam String phoneNumber){
+    public ResponseEntity<UserResponse> getByPhoneNumber(@RequestParam @NotBlank String phoneNumber){
         return ResponseEntity.ok(userMapper.toResponse(userService.findByPhoneNumber(phoneNumber)));
     }
     @GetMapping("/getByUserType")
-    public ResponseEntity<List<UserResponse>> getByUserType(@RequestParam UserType userType){
+    public ResponseEntity<List<UserResponse>> getByUserType(@RequestParam @NotNull UserType userType){
         return ResponseEntity.ok(userMapper.toUserResponseList(userService.findByUsersType(userType)));
     }
     @PutMapping("/changeEmail/{id}")
-    public ResponseEntity<?> changeEmail(@PathVariable Long id, @RequestBody UpdateEmail email){
+    public ResponseEntity<?> changeEmail(@PathVariable @Min(1) Long id, @RequestBody @Valid UpdateEmail email){
         userService.changeEmail(id, email.email());
         return ResponseEntity.ok("Почта успешно изменена");
     }
     @PutMapping("/changePhoneNumber")
-    public ResponseEntity<?> changePhoneNumber(@RequestParam Long id, @RequestBody UpdatePhoneNumber phoneNumber){
+    public ResponseEntity<?> changePhoneNumber(@RequestParam @Min(1) Long id, @RequestBody @Valid UpdatePhoneNumber phoneNumber){
         userService.changePhoneNumber(id,phoneNumber.phoneNumber());
         return ResponseEntity.ok("Номер успешно изменен");
     }

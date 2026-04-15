@@ -9,9 +9,12 @@ import com.example.nexobank2.service.impl.AccountRequestServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/account-requests")
 @AllArgsConstructor
+@Validated
 @Tag(name = "Account Request", description = "Управление заявками на открытие счетов")
 public class AccountRequestController {
     
@@ -46,7 +50,7 @@ public class AccountRequestController {
     
     @GetMapping("/{id}")
     @Operation(summary = "Получить заявку по ID")
-    public ResponseEntity<AccountRequestResponse> getRequestById(@PathVariable Long id) {
+    public ResponseEntity<AccountRequestResponse> getRequestById(@PathVariable @Min(1) Long id) {
         AccountRequest request = accountRequestService.findById(id);
         return ResponseEntity.ok(accountRequestMapper.toResponse(request));
     }
@@ -60,14 +64,14 @@ public class AccountRequestController {
     
     @GetMapping("/client/{clientId}")
     @Operation(summary = "Получить заявки клиента")
-    public ResponseEntity<List<AccountRequestResponse>> getRequestsByClient(@PathVariable Long clientId) {
+    public ResponseEntity<List<AccountRequestResponse>> getRequestsByClient(@PathVariable @Min(1) Long clientId) {
         List<AccountRequest> requests = accountRequestService.findByClientId(clientId);
         return ResponseEntity.ok(accountRequestMapper.toResponseList(requests));
     }
     
-    @GetMapping("/status/{status}")
+    @GetMapping("/status/")
     @Operation(summary = "Получить заявки по статусу")
-    public ResponseEntity<List<AccountRequestResponse>> getRequestsByStatus(@PathVariable AccountRequestStatus status) {
+    public ResponseEntity<List<AccountRequestResponse>> getRequestsByStatus(@RequestBody @Valid AccountRequestStatus status) {
         List<AccountRequest> requests = accountRequestService.findByStatus(status);
         return ResponseEntity.ok(accountRequestMapper.toResponseList(requests));
     }
@@ -75,8 +79,8 @@ public class AccountRequestController {
     @PostMapping("/{id}/approve")
     @Operation(summary = "Одобрить заявку")
     public ResponseEntity<AccountRequestResponse> approveRequest(
-            @PathVariable Long id,
-            @RequestParam Long employeeId) {
+            @PathVariable @Min(1) Long id,
+            @RequestParam @Min(1) Long employeeId) {
         AccountRequest request = accountRequestService.approveRequest(id, employeeId);
         return ResponseEntity.ok(accountRequestMapper.toResponse(request));
     }
@@ -84,16 +88,16 @@ public class AccountRequestController {
     @PostMapping("/{id}/reject")
     @Operation(summary = "Отклонить заявку")
     public ResponseEntity<Void> rejectRequest(
-            @PathVariable Long id,
-            @RequestParam Long employeeId,
-            @RequestParam String reason) {
+            @PathVariable @Min(1) Long id,
+            @RequestParam @Min(1) Long employeeId,
+            @RequestParam @NotBlank String reason) {
         accountRequestService.rejectRequest(id, employeeId, reason);
         return ResponseEntity.ok().build();
     }
     
     @GetMapping("/employee/{employeeId}")
     @Operation(summary = "Получить заявки, обработанные сотрудником")
-    public ResponseEntity<List<AccountRequestResponse>> getRequestsByEmployee(@PathVariable Long employeeId) {
+    public ResponseEntity<List<AccountRequestResponse>> getRequestsByEmployee(@PathVariable @Min(1) Long employeeId) {
         List<AccountRequest> requests = accountRequestService.findByApprovedById(employeeId);
         return ResponseEntity.ok(accountRequestMapper.toResponseList(requests));
     }

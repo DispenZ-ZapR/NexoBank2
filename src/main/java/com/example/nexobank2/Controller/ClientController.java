@@ -10,8 +10,13 @@ import com.example.nexobank2.mapper.ClientMapper;
 import com.example.nexobank2.mapper.UserMapper;
 import com.example.nexobank2.service.impl.ClientServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -21,50 +26,51 @@ import java.util.List;
 @RequestMapping("/api/client")
 @AllArgsConstructor
 @Tag(name = "Контроллер клиента")
+@Validated
 public class ClientController {
     private final ClientMapper clientMapper;
     private final ClientServiceImpl clientServiceImpl;
     private final UserMapper userMapper;
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody ClientRequest request){
+    public ResponseEntity<?> save(@RequestBody @Valid ClientRequest request){
         Client client = clientMapper.toEntity(request);
         clientServiceImpl.save(client);
         return ResponseEntity.ok("Аккаунт создан! на вашу почту был отправлен код, пожалуйста, подтвердите аккаунт");
     }
     @GetMapping("/getAll")
-    public ResponseEntity<List<ClientResponse>> getAll(@RequestParam ClientStatus status){
+    public ResponseEntity<List<ClientResponse>> getAll(@RequestParam @NotNull ClientStatus status){
         return ResponseEntity.ok(clientMapper.toResponseList(clientServiceImpl.findAll(status)));
     }
-    @GetMapping("/getById")
-    public ResponseEntity<ClientResponse> getById(@RequestParam Long id){
+    @GetMapping("/getBy/{id}")
+    public ResponseEntity<ClientResponse> getById(@PathVariable @Min(1) Long id){
         return ResponseEntity.ok(clientMapper.toResponse(clientServiceImpl.findById(id)));
     }
-    @DeleteMapping("/deleteById")
-    public ResponseEntity<?> deleteById(@RequestParam Long id){
+    @DeleteMapping("/deleteBy/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable @Min(1) Long id){
         clientServiceImpl.deleteById(id);
         return ResponseEntity.ok("Клиент удален");
     }
     @GetMapping("/findByDate")
-    public ResponseEntity<List<ClientResponse>> findByDate(@RequestParam LocalDateTime date){
+    public ResponseEntity<List<ClientResponse>> findByDate(@RequestParam @NotNull LocalDateTime date){
         return ResponseEntity.ok(clientMapper.toResponseList(clientServiceImpl.findByCreatedAt(date)));
     }
     @GetMapping("/findByUserId")
-    public ResponseEntity<ClientResponse> findByUserId(@RequestParam Long userId){
+    public ResponseEntity<ClientResponse> findByUserId(@RequestParam @Min(1) Long userId){
         return clientServiceImpl.findByUserId(userId)
                 .map(client -> ResponseEntity.ok(clientMapper.toResponse(client)))
                 .orElse(ResponseEntity.notFound().build());
     }
     @GetMapping("/findByDateRange")
-    public ResponseEntity<List<ClientResponse>> findByDateRange(@RequestParam ClientStatus status, @RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate){
+    public ResponseEntity<List<ClientResponse>> findByDateRange(@RequestParam @NotNull ClientStatus status, @RequestParam @NotNull LocalDateTime startDate, @RequestParam @NotNull LocalDateTime endDate){
         return ResponseEntity.ok(clientMapper.toResponseList(clientServiceImpl.findByDateRange(status, startDate, endDate)));
     }
     @PutMapping("/updateStatus/{id}")
-    public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestParam ClientStatus status){
+    public ResponseEntity<?> updateStatus(@PathVariable @Min(1) Long id, @RequestParam @NotNull ClientStatus status){
         clientServiceImpl.updateClientStatus(id, status);
         return ResponseEntity.ok("Статус клиента изменен");
     }
     @GetMapping("/getClientCountByStatus")
-    public ResponseEntity<Integer> getClientCountByStatus(@RequestParam ClientStatus status){
+    public ResponseEntity<Integer> getClientCountByStatus(@RequestParam @NotNull ClientStatus status){
         return ResponseEntity.ok(clientServiceImpl.getClientCountByStatus(status));
     }
 }
