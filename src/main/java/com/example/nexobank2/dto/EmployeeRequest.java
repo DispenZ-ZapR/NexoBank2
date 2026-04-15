@@ -12,26 +12,35 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeRequest {
+    @NotBlank(message = "Email обязателен!")
     @Email(message = "Неверный формат электронной почты")
-    @NotBlank
     private String email;
-    @NotBlank
-    @Size(min = 10, max = 15, message = "Номмер должен быть от 9 до 15 цифр")
-    @Pattern(regexp = "^\\+0?[0-9]{11,15}$", message = "Номер телефона должен содержать 11-15 цифр")
+    
+    @NotBlank(message = "Номер телефона обязателен!")
+    @Pattern(regexp = "^(\\+996|996)[0-9]{9}$", message = "Формат: +996700123456 или 996700123456")
     private String phoneNumber;
 
     // данные для passport
-    @NotBlank
-    @Size(min = 2, max = 50,message = "Имя должно быть от 2 до 50 символов")
+    @NotBlank(message = "Имя обязательно!")
+    @Size(min = 2, max = 50, message = "Имя должно быть от 2 до 50 символов")
     private String firstName;
-    @NotBlank
-    @Size(min = 2, max = 50,message = "Фамилия должна быть от 2 до 50 символов")
+    
+    @NotBlank(message = "Фамилия обязательна!")
+    @Size(min = 2, max = 50, message = "Фамилия должна быть от 2 до 50 символов")
     private String lastName;
+    
     private String middleName;
-    @Past
+    
     @NotNull(message = "Дата рождения обязательна!")
+    @Past(message = "Дата рождения должна быть в прошлом")
     private LocalDate dateOfBirth;
+    
+    @NotBlank(message = "ИНН обязателен!")
+    @Pattern(regexp = "^[0-9]{14}$", message = "ИНН должен содержать 14 цифр")
     private String personalNumber;
+    
+    @NotBlank(message = "Номер паспорта обязателен!")
+    @Pattern(regexp = "^[A-Z]{2}[0-9]{7}$", message = "Формат паспорта: AN1234567")
     private String passportNumber;
 
     // данные специфичные для employee
