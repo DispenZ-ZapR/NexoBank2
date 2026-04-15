@@ -10,8 +10,14 @@ import com.example.nexobank2.service.OperationService;
 import com.example.nexobank2.service.TransactionService;
 import com.example.nexobank2.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +27,7 @@ import java.util.UUID;
 @RequestMapping("/api/operations")
 @AllArgsConstructor
 @Tag(name = "Operation", description = "Управление операциями")
+@Validated
 public class OperationController {
 
     private final OperationService operationService;
@@ -40,7 +47,7 @@ public class OperationController {
 
     @GetMapping("/{uuid}")
     @io.swagger.v3.oas.annotations.Operation(summary = "Получить операцию по UUID")
-    public ResponseEntity<OperationResponse> getOperationByUuid(@PathVariable UUID uuid) {
+    public ResponseEntity<OperationResponse> getOperationByUuid(@PathVariable @NotNull UUID uuid) {
         Operation operation = operationService.getByUUID(uuid);
         return ResponseEntity.ok(operationMapper.toResponse(operation, transactionService.findByOperationId(uuid)));
     }
@@ -48,15 +55,15 @@ public class OperationController {
     @PostMapping("/transfer")
     @io.swagger.v3.oas.annotations.Operation(summary = "Перевод между счетами")
     public ResponseEntity<OperationResponse> transfer(
-            @RequestBody TransactionRequest request,
-            @RequestParam Long userId) {
+            @RequestBody @Valid TransactionRequest request,
+            @RequestParam @Min(1) Long userId) {
         User initiator = userService.findById(userId);
         Operation operation = operationService.transfer(request, initiator);
         return ResponseEntity.ok(operationMapper.toResponse(operation, transactionService.findByOperationId(operation.getId())));
     }
 
     @GetMapping("/getByInitiatorId/{id}")
-    public ResponseEntity<List<OperationResponse>> getByInitiatorId(@PathVariable Long id) {
+    public ResponseEntity<List<OperationResponse>> getByInitiatorId(@PathVariable @Min(1) Long id) {
         List<Operation> operations = operationService.findByInitiatorId(id);
         List<OperationResponse> responses = operations.stream()
                 .map(op -> operationMapper.toResponse(op, transactionService.findByOperationId(op.getId())))
@@ -65,7 +72,7 @@ public class OperationController {
     }
 
     @GetMapping("/getByStatus")
-    public ResponseEntity<List<OperationResponse>> getByStatus(OperationStatus status) {
+    public ResponseEntity<List<OperationResponse>> getByStatus(@RequestParam @NotNull OperationStatus status) {
         List<Operation> operations = operationService.findByStatus(status);
         List<OperationResponse> responses = operations.stream()
                 .map(op -> operationMapper.toResponse(op, transactionService.findByOperationId(op.getId())))
