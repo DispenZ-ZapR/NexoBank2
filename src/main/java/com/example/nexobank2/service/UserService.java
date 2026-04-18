@@ -17,4 +17,6 @@ public interface UserService{
     void delete(User id);
     User findById(Long id);
     List<User> findAll();
+
+    User findByActivationToken(String token);
 }
