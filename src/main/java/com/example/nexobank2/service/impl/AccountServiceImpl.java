@@ -14,8 +14,9 @@ import com.example.nexobank2.repository.AccountRepository;
 import com.example.nexobank2.repository.AccountRequestRepository;
 import com.example.nexobank2.repository.AccountTypeRepository;
 import com.example.nexobank2.service.AccountService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.mapstruct.Named;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,13 +25,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final AccountRequestRepository accountRequestRepository;
     private final AccountTypeRepository accountTypeRepository;
     private final AccountCurrencyRepository accountCurrencyRepository;
-
     @Override
     public List<Account> findAll() {
         return accountRepository.findAll();
