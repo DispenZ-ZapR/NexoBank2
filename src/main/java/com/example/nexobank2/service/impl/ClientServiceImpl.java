@@ -76,8 +76,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Optional<Client> findByUserId(Long userId) {
-        return clientRepository.findByUserId(userId);
+    public Client findByUserId(Long userId) {
+        return clientRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException("Клиент не найден!"));
     }
     @Override
     public List<Client> findByDateRange(ClientStatus status,LocalDateTime startDate, LocalDateTime endDate) {
