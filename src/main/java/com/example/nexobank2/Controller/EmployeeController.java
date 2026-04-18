@@ -3,6 +3,7 @@ package com.example.nexobank2.Controller;
 import com.example.nexobank2.dto.EmployeeRequest;
 import com.example.nexobank2.dto.EmployeeResponse;
 import com.example.nexobank2.entity.Employee;
+import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.EmployeeStatus;
 import com.example.nexobank2.mapper.EmployeeMapper;
 import com.example.nexobank2.service.EmployeeService;
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
