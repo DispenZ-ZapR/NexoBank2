@@ -73,4 +73,9 @@ public class ClientController {
     public ResponseEntity<Integer> getClientCountByStatus(@RequestParam @NotNull ClientStatus status){
         return ResponseEntity.ok(clientServiceImpl.getClientCountByStatus(status));
     }
+
+    @GetMapping("/getMyProfile")
+    public ResponseEntity<ClientResponse> myProfile(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(clientMapper.toResponse(clientServiceImpl.getMyProfile(user.getId())));
+}
 }
