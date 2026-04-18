@@ -57,6 +57,11 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    public Client getMyProfile(Long userId) {
+        return findByUserId(userId);
+    }
+
+    @Override
     public void deleteById(Long id) {
         Client client =findById(id);
         client.setClientStatus(ClientStatus.DELETED);
