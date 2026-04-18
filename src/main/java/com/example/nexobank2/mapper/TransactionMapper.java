@@ -6,9 +6,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
+import java.util.List;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface TransactionMapper {
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "transactionType", target = "transactionType")
     TransactionResponse toResponse(Transaction transaction);
+    
+    List<TransactionResponse> toResponseList(List<Transaction> transactions);
 }
