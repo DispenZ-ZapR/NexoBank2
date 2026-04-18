@@ -23,10 +23,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers(
-                        "/scalar/**","/v3/api-docs/**","/api/client/save","/api/employees/save","/api/user/verify/**","/api/auth/**").permitAll().anyRequest().authenticated()
-                        .requestMatchers("api/client/getMyProfile").hasRole("CLIENT")
-                        .requestMatchers("api/client/**","api/employees/**").hasAnyRole("EMPLOYEE","ADMIN"))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/scalar/**","/v3/api-docs/**","/api/client/save","/api/employees/save","/api/user/verify/**","/api/auth/**").permitAll()
+                        .requestMatchers("/api/client/getMyProfile").hasRole("CLIENT")
+                        .requestMatchers("/api/client/**","/api/employees/**").hasAnyRole("EMPLOYEE","ADMIN")
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults());
