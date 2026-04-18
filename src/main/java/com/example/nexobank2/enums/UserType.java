@@ -1,7 +1,14 @@
 package com.example.nexobank2.enums;
 
-public enum UserType {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum UserType implements GrantedAuthority {
     CLIENT,
     EMPLOYEE,
-    ADMIN
+    ADMIN;
+
+    @Override
+    public String getAuthority() {
+        return "ROLE_" + name();
+    }
 }
