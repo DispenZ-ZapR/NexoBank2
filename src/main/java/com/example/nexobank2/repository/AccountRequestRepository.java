@@ -17,4 +17,6 @@ public interface AccountRequestRepository extends JpaRepository<AccountRequest, 
     List<AccountRequest> findByClientIdAndStatus(Long clientId, AccountRequestStatus status);
     
     List<AccountRequest> findByApprovedById(Long employeeId);
+
+    List<AccountRequest> findAccountRequestByApprovedBy_Id(Long approvedById);
 }
