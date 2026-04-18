@@ -15,9 +15,11 @@ public interface ClientService {
     void deleteById(Long id);
     
     List<Client> findByCreatedAt(LocalDateTime createdAt);
-    Optional<Client> findByUserId(Long userId);
+    Client findByUserId(Long userId);
     
    List<Client> findByDateRange(ClientStatus status, LocalDateTime startDate, LocalDateTime endDate);
     void updateClientStatus(Long id, ClientStatus status);
     Integer getClientCountByStatus(ClientStatus status);
+
+    Client getMyProfile(Long userId);
 }
