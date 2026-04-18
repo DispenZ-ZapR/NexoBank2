@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,6 @@ import java.util.UUID;
 public class OperationController {
 
     private final OperationService operationService;
-    private final UserService userService;
     private final TransactionService transactionService;
     private final OperationMapper operationMapper;
 
@@ -39,6 +39,18 @@ public class OperationController {
     @io.swagger.v3.oas.annotations.Operation(summary = "Получить все операции")
     public ResponseEntity<List<OperationResponse>> getAllOperations() {
         List<Operation> operations = operationService.getByAll();
+        List<OperationResponse> responses = operations.stream()
+                .map(op -> operationMapper.toResponse(op, transactionService.findByOperationId(op.getId())))
+                .toList();
+        return ResponseEntity.ok(responses);
+    }
+    
+    @GetMapping("/my")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Получить мои операции")
+    public ResponseEntity<List<OperationResponse>> getMyOperations(
+            @AuthenticationPrincipal User currentUser) {
+        
+        List<Operation> operations = operationService.getMyOperations(currentUser.getId());
         List<OperationResponse> responses = operations.stream()
                 .map(op -> operationMapper.toResponse(op, transactionService.findByOperationId(op.getId())))
                 .toList();
