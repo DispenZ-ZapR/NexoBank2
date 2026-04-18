@@ -64,4 +64,22 @@ public class TransactionServiceImpl implements TransactionService {
     public List<Transaction> findByOperationId(UUID operationId) {
         return transactionRepository.findByOperationId(operationId);
     }
+    
+    @Override
+    public List<Transaction> getMyTransactions(Long userId) {
+        return transactionRepository.findByUserId(userId);
+    }
+    
+    @Override
+    public List<Transaction> getAccountTransactions(Long accountId, Long userId) {
+        Account account = accountRepository.findById(accountId)
+            .orElseThrow(() -> new NotFoundException("Счет не найден"));
+        
+        if (!account.getClient().getUser().getId().equals(userId)) {
+            throw new ForbiddenException("Это не ваш счет!");
+        }
+        
+        return transactionRepository.findByAccountIdOrderByTransactionDateDesc(accountId);
+    }
+
 }
