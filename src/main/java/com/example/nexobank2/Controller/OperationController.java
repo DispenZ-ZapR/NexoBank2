@@ -56,9 +56,9 @@ public class OperationController {
     @io.swagger.v3.oas.annotations.Operation(summary = "Перевод между счетами")
     public ResponseEntity<OperationResponse> transfer(
             @RequestBody @Valid TransactionRequest request,
-            @RequestParam @Min(1) Long userId) {
-        User initiator = userService.findById(userId);
-        Operation operation = operationService.transfer(request, initiator);
+            @AuthenticationPrincipal User currentUser) {
+        
+        Operation operation = operationService.transfer(request, currentUser);
         return ResponseEntity.ok(operationMapper.toResponse(operation, transactionService.findByOperationId(operation.getId())));
     }
 
