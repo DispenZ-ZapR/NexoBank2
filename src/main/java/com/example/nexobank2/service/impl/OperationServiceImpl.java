@@ -44,43 +44,44 @@ public class OperationServiceImpl implements OperationService {
 @Override
 @Transactional
 public Operation transfer(TransactionRequest request, User initiator) {
-    Account fromAccount = accountRepository.findById(request.getFromAccountId())
+    Account fromAccount = accountRepository.findByIdWithClientAndUser(request.getFromAccountId())
             .orElseThrow(() -> new NotFoundException("Счёт отправителя не найден"));
     Account toAccount = accountRepository.findById(request.getToAccountId())
             .orElseThrow(() -> new NotFoundException("Счёт получателя не найден"));
 
     if (!fromAccount.getClient().getUser().getId().equals(initiator.getId())) {
-        throw new BadRequestException("Счёт не принадлежит пользователю");
+        throw new BadRequestException("Счёт отправителя (ID: " + request.getFromAccountId() + ") не принадлежит вам. Вы можете переводить только со своих счетов.");
     }
+    
     if (request.getFromAccountId().equals(request.getToAccountId())) {
         throw new BadRequestException("Нельзя переводить на тот же счет");
     }
-        Operation operation = new Operation();
-        operation.setInitiator(initiator);
-        operation.setChannel("WEB");
-        operation.setStatus(OperationStatus.PENDING);
-        operation.setReason(request.getReason());
-        operation.setCreatedAt(LocalDateTime.now());
-        operation = operationRepository.save(operation);
+    Operation operation = new Operation();
+    operation.setInitiator(initiator);
+    operation.setChannel("WEB");
+    operation.setStatus(OperationStatus.PENDING);
+    operation.setReason(request.getReason());
+    operation.setCreatedAt(LocalDateTime.now());
+    operation = operationRepository.save(operation);
 
-        try {
-            accountService.transfer(request.getFromAccountId(), request.getToAccountId(), request.getAmount());
-            
-            fromAccount = accountRepository.findById(request.getFromAccountId()).get();
-            toAccount = accountRepository.findById(request.getToAccountId()).get();
-            
-            transactionService.record(fromAccount, toAccount, request.getAmount(), operation);
+    try {
+        accountService.transfer(request.getFromAccountId(), request.getToAccountId(), request.getAmount());
+        
+        fromAccount = accountRepository.findById(request.getFromAccountId()).get();
+        toAccount = accountRepository.findById(request.getToAccountId()).get();
+        
+        transactionService.record(fromAccount, toAccount, request.getAmount(), operation);
 
-            operation.setStatus(OperationStatus.SUCCESSFULLY);
-            operationRepository.save(operation);
+        operation.setStatus(OperationStatus.SUCCESSFULLY);
+        operationRepository.save(operation);
 
-            return operation;
-        } catch (Exception e) {
-            operation.setStatus(OperationStatus.FAILED);
-            operationRepository.save(operation);
-            throw new ServerErrorException("Ошибка при выполнении перевода: " + e.getMessage());
-        }
+        return operation;
+    } catch (Exception e) {
+        operation.setStatus(OperationStatus.FAILED);
+        operationRepository.save(operation);
+        throw new ServerErrorException("Ошибка при выполнении перевода: " + e.getMessage());
     }
+}
 
     @Override
     public List<Operation> getMyOperations(Long userId) {

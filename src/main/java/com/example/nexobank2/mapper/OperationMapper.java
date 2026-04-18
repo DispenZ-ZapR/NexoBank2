@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = TransactionMapper.class)
 public interface OperationMapper {
     @Mapping(source = "operation.initiator.id", target = "initiatorId")
     @Mapping(source = "operation.status", target = "status")

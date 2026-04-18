@@ -5,12 +5,13 @@ import com.example.nexobank2.entity.Transaction;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.Named;
 
 import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface TransactionMapper {
-    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(target = "accountId", expression = "java(transaction.getAccount() != null ? transaction.getAccount().getId() : null)")
     @Mapping(source = "transactionType", target = "transactionType")
     TransactionResponse toResponse(Transaction transaction);
     

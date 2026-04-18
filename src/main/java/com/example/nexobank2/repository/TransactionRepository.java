@@ -13,5 +13,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findByUserId(@Param("userId") Long userId);
 
     List<Transaction> findByAccountIdOrderByTransactionDateDesc(Long accountId);
-    List<Transaction> findByOperationId(UUID operationId);
+    
+    @Query("SELECT t FROM Transaction t JOIN FETCH t.account WHERE t.operation.id = :operationId")
+    List<Transaction> findByOperationId(@Param("operationId") UUID operationId);
 }
