@@ -3,12 +3,14 @@ package com.example.nexobank2.Controller;
 import com.example.nexobank2.dto.UserRequest;
 import com.example.nexobank2.dto.UserResponse;
 import com.example.nexobank2.dto.recordDto.ActivationAccount;
+import com.example.nexobank2.dto.recordDto.AuthResponse;
 import com.example.nexobank2.dto.recordDto.UpdateEmail;
 import com.example.nexobank2.dto.recordDto.UpdatePhoneNumber;
 import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.UserType;
 import com.example.nexobank2.mapper.UserMapper;
 
+import com.example.nexobank2.service.impl.JwtService;
 import com.example.nexobank2.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,10 +33,13 @@ import java.util.List;
 public class UserController {
     private final UserServiceImpl userService;
     private final UserMapper userMapper;
+    private final JwtService jwtService;
     @PostMapping("/verify/{token}")
     public ResponseEntity<?> activateAccount(@PathVariable String token, @RequestBody @Valid ActivationAccount password){
+        User user = userService.findByActivationToken(token);
         userService.activateAccount(password.password(), token);
-        return ResponseEntity.ok("Аккаунт успешно подтвержден");
+        String jwtToken = jwtService.generateToken(user);
+        return ResponseEntity.ok(new AuthResponse(jwtToken));
     }
     @GetMapping("/getById/{id}")
     public ResponseEntity<UserResponse> getById(@PathVariable @Min(1) Long id){
