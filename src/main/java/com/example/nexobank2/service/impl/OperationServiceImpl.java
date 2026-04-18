@@ -40,21 +40,14 @@ public class OperationServiceImpl implements OperationService {
         return operationRepository.findById(uuid).orElseThrow(()-> new NotFoundException("Operation not found"));
     }
 
-    @Override
-    @Transactional
-    public Operation transfer(TransactionRequest request, User initiator) {
-        // 2. Проверяем что счета существуют
-        Account fromAccount = accountRepository.findById(request.getFromAccountId())
-                .orElseThrow(() -> new NotFoundException("Счёт отправителя не найден"));
-        Account toAccount = accountRepository.findById(request.getToAccountId())
-                .orElseThrow(() -> new NotFoundException("Счёт получателя не найден"));
+@Override
+@Transactional
+public Operation transfer(TransactionRequest request, User initiator) {
+    Account fromAccount = accountRepository.findById(request.getFromAccountId())
+            .orElseThrow(() -> new NotFoundException("Счёт отправителя не найден"));
+    Account toAccount = accountRepository.findById(request.getToAccountId())
+            .orElseThrow(() -> new NotFoundException("Счёт получателя не найден"));
 
-        // 3. Проверяем что счёт принадлежит клиенту
-        if (!fromAccount.getClient().getUser().getId().equals(initiator.getId())) {
-            throw new BadRequestException("Счёт не принадлежит пользователю");
-        }
-
-        // 5. Создаём Operation со статусом PENDING
     if (!fromAccount.getClient().getUser().getId().equals(initiator.getId())) {
         throw new BadRequestException("Счёт не принадлежит пользователю");
     }
