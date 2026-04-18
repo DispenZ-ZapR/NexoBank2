@@ -4,7 +4,9 @@ import com.example.nexobank2.entity.Account;
 import com.example.nexobank2.entity.Operation;
 import com.example.nexobank2.entity.Transaction;
 import com.example.nexobank2.enums.TransactionType;
+import com.example.nexobank2.exception.ForbiddenException;
 import com.example.nexobank2.exception.NotFoundException;
+import com.example.nexobank2.repository.AccountRepository;
 import com.example.nexobank2.repository.TransactionRepository;
 import com.example.nexobank2.service.TransactionService;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
+    private final AccountRepository accountRepository;
+    
     @Override
     public void record(Account fromAccount, Account toAccount, BigDecimal amount, Operation operation) {
         Transaction debit = new Transaction();
