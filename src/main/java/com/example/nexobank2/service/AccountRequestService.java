@@ -22,4 +22,8 @@ public interface AccountRequestService extends BaseService<AccountRequest> {
     List<AccountRequest> getPendingRequests();
     
     List<AccountRequest> findByApprovedById(Long employeeId);
+
+    List<AccountRequest> getMyRequest(Long userId);
+
+    List<AccountRequest> getMyCheckedRequest(Long userId);
 }
