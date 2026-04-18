@@ -124,7 +124,19 @@ public class AccountRequestServiceImpl implements AccountRequestService {
         
         return updatedRequest;
     }
-    
+
+    @Override
+    public List<AccountRequest> getMyRequest(Long userId) {
+        Client client = clientService.findByUserId(userId);
+        return accountRequestRepository.findByClientId(client.getId());
+    }
+
+    @Override
+    public List<AccountRequest> getMyCheckedRequest(Long userId) {
+        Employee employee = employeeService.getUserById(userId);
+        return accountRequestRepository.findAccountRequestByApprovedBy_Id(employee.getId());
+    }
+
     @Override
     @Transactional
     public void rejectRequest(Long requestId, Long employeeId, String reason) {
