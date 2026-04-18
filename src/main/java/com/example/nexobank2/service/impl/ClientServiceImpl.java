@@ -4,10 +4,12 @@ import com.example.nexobank2.entity.Client;
 import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.ClientStatus;
 import com.example.nexobank2.enums.UserType;
+import com.example.nexobank2.event.ClientCreatedEvent;
 import com.example.nexobank2.exception.NotFoundException;
 import com.example.nexobank2.repository.ClientRepository;
 import com.example.nexobank2.service.ClientService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +18,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
     private final PassportServiceImpl passportService;
     private final UserServiceImpl userService;
     private final EmailServiceImpl emailService;
-    private final AccountServiceImpl accountService;
+    private final ApplicationEventPublisher eventPublisher;
     @Override
     public List<Client> findAll(ClientStatus status) {
         return clientRepository.findByClientStatus(status);
@@ -41,7 +43,7 @@ public class ClientServiceImpl implements ClientService {
         
         Client savedClient = clientRepository.save(client);
         
-        accountService.createDefaultAccount(savedClient);
+        eventPublisher.publishEvent(new ClientCreatedEvent(this, savedClient.getId()));
         
         String link = "http://localhost:8080/api/user/verify/" + savedUser.getAcToken();
         emailService.sendSimpleMessage(savedUser.getEmail(),"Подтверждение аккаунта",
