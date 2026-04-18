@@ -88,6 +88,10 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
+    public List<Operation> getMyOperations(Long userId) {
+        return operationRepository.findByInitiatorIdOrderByCreatedAtDesc(userId);
+    }
+    @Override
     public List<Operation> getByAll() {
         return operationRepository.findAll();
     }
