@@ -3,6 +3,8 @@ package com.example.nexobank2.repository;
 import com.example.nexobank2.entity.Account;
 import com.example.nexobank2.enums.AccountStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -18,4 +20,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     boolean existsByAccountNumber(String accountNumber);
     List<Account> findByAccountType_Id(Long accountTypeId);
     List<Account> findByCurrency_Id(Long currencyId);
+    
+    @Query("SELECT a FROM Account a JOIN FETCH a.client c JOIN FETCH c.user WHERE a.id = :id")
+    Optional<Account> findByIdWithClientAndUser(@Param("id") Long id);
 }
