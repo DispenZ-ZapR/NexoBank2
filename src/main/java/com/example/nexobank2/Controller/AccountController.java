@@ -2,8 +2,11 @@ package com.example.nexobank2.Controller;
 
 import com.example.nexobank2.dto.AccountResponse;
 import com.example.nexobank2.entity.Account;
+import com.example.nexobank2.entity.Client;
+import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.AccountStatus;
 import com.example.nexobank2.mapper.AccountMapper;
+import com.example.nexobank2.service.ClientService;
 import com.example.nexobank2.service.impl.AccountServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +15,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +31,7 @@ public class AccountController {
     
     private final AccountServiceImpl accountService;
     private final AccountMapper accountMapper;
+    private final ClientService clientService;
     
     @GetMapping
     @Operation(summary = "Получить все счета")
@@ -81,7 +86,7 @@ public class AccountController {
     @Operation(summary = "Изменить статус счета")
     public ResponseEntity<Void> changeStatus(
             @PathVariable @Min(1) Long id,
-            @RequestParam @NotBlank AccountStatus status) {
+            @RequestParam @NotNull AccountStatus status) {
         accountService.changeAccountStatus(id, status);
         return ResponseEntity.ok().build();
     }
@@ -106,5 +111,12 @@ public class AccountController {
     public ResponseEntity<Void> deleteAccount(@PathVariable @Min(1) Long id) {
         accountService.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/myAccounts")
+    public ResponseEntity<List<AccountResponse>> getAccounts(@AuthenticationPrincipal User user) {
+        Client client = clientService.findByUserId(user.getId());
+        List<Account> accounts = accountService.findByClientId(client.getId());
+        return ResponseEntity.ok(accountMapper.toResponseList(accounts));
     }
 }
