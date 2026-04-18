@@ -3,6 +3,7 @@ package com.example.nexobank2.Controller;
 import com.example.nexobank2.dto.AccountRequestRequest;
 import com.example.nexobank2.dto.AccountRequestResponse;
 import com.example.nexobank2.entity.AccountRequest;
+import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.AccountRequestStatus;
 import com.example.nexobank2.mapper.AccountRequestMapper;
 import com.example.nexobank2.service.impl.AccountRequestServiceImpl;
@@ -11,9 +12,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,7 +74,7 @@ public class AccountRequestController {
     
     @GetMapping("/status/")
     @Operation(summary = "Получить заявки по статусу")
-    public ResponseEntity<List<AccountRequestResponse>> getRequestsByStatus(@RequestBody @Valid AccountRequestStatus status) {
+    public ResponseEntity<List<AccountRequestResponse>> getRequestsByStatus(@RequestParam @NotNull AccountRequestStatus status) {
         List<AccountRequest> requests = accountRequestService.findByStatus(status);
         return ResponseEntity.ok(accountRequestMapper.toResponseList(requests));
     }
@@ -100,5 +103,15 @@ public class AccountRequestController {
     public ResponseEntity<List<AccountRequestResponse>> getRequestsByEmployee(@PathVariable @Min(1) Long employeeId) {
         List<AccountRequest> requests = accountRequestService.findByApprovedById(employeeId);
         return ResponseEntity.ok(accountRequestMapper.toResponseList(requests));
+    }
+
+    @GetMapping("/myClient")
+    public ResponseEntity<List<AccountRequestResponse>> getMyRequest(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(accountRequestMapper.toResponseList(accountRequestService.getMyRequest(user.getId())));
+    }
+
+    @GetMapping("/meEmployee")
+    public ResponseEntity<List<AccountRequestResponse>> getMyCheckedRequest(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(accountRequestMapper.toResponseList(accountRequestService.getMyCheckedRequest(user.getId())));
     }
 }
