@@ -60,8 +60,7 @@ public class UserServiceImpl implements UserService {
         }
         if (user.getUserType() == UserType.CLIENT){
             user.getClient().setClientStatus(ClientStatus.ACTIVE);
-            // Активируем счета клиента
-            accountService.activateClientAccounts(user.getClient().getId());
+            eventPublisher.publishEvent(new ClientActivatedEvent(this, user.getClient().getId()));
         }
         userRepository.save(user);
     }
