@@ -55,6 +55,12 @@ public class OperationServiceImpl implements OperationService {
         }
 
         // 5. Создаём Operation со статусом PENDING
+    if (!fromAccount.getClient().getUser().getId().equals(initiator.getId())) {
+        throw new BadRequestException("Счёт не принадлежит пользователю");
+    }
+    if (request.getFromAccountId().equals(request.getToAccountId())) {
+        throw new BadRequestException("Нельзя переводить на тот же счет");
+    }
         Operation operation = new Operation();
         operation.setInitiator(initiator);
         operation.setChannel("WEB");
