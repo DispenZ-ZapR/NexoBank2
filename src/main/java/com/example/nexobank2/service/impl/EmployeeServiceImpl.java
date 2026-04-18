@@ -44,6 +44,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public Employee getMyProfile(Long userId) {
+        Employee employee = getUserById(userId);
+        return findById(employee.getId());
+    }
+
+    @Override
     public List<Employee> getByEmployeeStatus(EmployeeStatus status) {
         return employeeRepository.findEmployeesByEmployeeStatus(status).orElse(List.of());
     }
