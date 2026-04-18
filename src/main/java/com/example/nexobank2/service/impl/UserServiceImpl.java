@@ -65,6 +65,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByActivationToken(String token) {
+        return userRepository.findUsersByAcToken(token).orElseThrow(()-> new NotFoundException("Пользователь не найден"));
+    }
+
+    @Override
     public void delete(User user) {
        user.setDeletedAt(LocalDateTime.now());
        userRepository.save(user);
