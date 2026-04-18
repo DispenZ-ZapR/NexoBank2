@@ -62,15 +62,6 @@ public class OperationController {
         return ResponseEntity.ok(operationMapper.toResponse(operation, transactionService.findByOperationId(operation.getId())));
     }
 
-    @GetMapping("/getByInitiatorId/{id}")
-    public ResponseEntity<List<OperationResponse>> getByInitiatorId(@PathVariable @Min(1) Long id) {
-        List<Operation> operations = operationService.findByInitiatorId(id);
-        List<OperationResponse> responses = operations.stream()
-                .map(op -> operationMapper.toResponse(op, transactionService.findByOperationId(op.getId())))
-                .toList();
-        return ResponseEntity.ok(responses);
-    }
-
     @GetMapping("/getByStatus")
     public ResponseEntity<List<OperationResponse>> getByStatus(@RequestParam @NotNull OperationStatus status) {
         List<Operation> operations = operationService.findByStatus(status);
