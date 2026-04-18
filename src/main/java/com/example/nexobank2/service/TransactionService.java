@@ -13,4 +13,6 @@ import java.util.UUID;
 public interface TransactionService extends BaseService<Transaction>{
     void record(Account fromAccount, Account toAccount, BigDecimal amount, Operation operation);
     List<Transaction> findByOperationId(UUID operationId);
+    List<Transaction> getMyTransactions(Long userId);
+    List<Transaction> getAccountTransactions(Long accountId, Long userId);
 }
