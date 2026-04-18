@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -63,23 +64,18 @@ public Operation transfer(TransactionRequest request, User initiator) {
         operation = operationRepository.save(operation);
 
         try {
-            // 4, 6, 7. Проверка баланса + списание + зачисление
             accountService.transfer(request.getFromAccountId(), request.getToAccountId(), request.getAmount());
             
-            // Обновляем объекты после изменения балансов
             fromAccount = accountRepository.findById(request.getFromAccountId()).get();
             toAccount = accountRepository.findById(request.getToAccountId()).get();
             
-            // Создаём Transaction записи
             transactionService.record(fromAccount, toAccount, request.getAmount(), operation);
 
-            // 8. Меняем статус Operation на COMPLETED
             operation.setStatus(OperationStatus.SUCCESSFULLY);
             operationRepository.save(operation);
 
             return operation;
         } catch (Exception e) {
-            // 9. Если что-то упало → статус FAILED, откат транзакции
             operation.setStatus(OperationStatus.FAILED);
             operationRepository.save(operation);
             throw new ServerErrorException("Ошибка при выполнении перевода: " + e.getMessage());
