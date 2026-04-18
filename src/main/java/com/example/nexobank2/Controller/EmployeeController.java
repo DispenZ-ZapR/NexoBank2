@@ -95,4 +95,9 @@ public class EmployeeController {
         employeeService.removeEmployeePosition(positionId, employeeId);
         return ResponseEntity.ok("Должность удалена!");
     }
+
+    @GetMapping("/myProfile")
+    public ResponseEntity<EmployeeResponse> myProfile(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(employeeMapper.toResponse(employeeService.getMyProfile(user.getId())));
+    }
 }
