@@ -25,5 +25,6 @@ public interface EmployeeService {
     Employee findById(Long id);
     List<Employee> findAll();
 
+    Employee getMyProfile(Long userId);
 }
 
