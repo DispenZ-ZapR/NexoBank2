@@ -6,6 +6,7 @@ import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.ClientStatus;
 import com.example.nexobank2.enums.EmployeeStatus;
 import com.example.nexobank2.enums.UserType;
+import com.example.nexobank2.event.ClientActivatedEvent;
 import com.example.nexobank2.exception.AlreadyExistsException;
 import com.example.nexobank2.exception.BadRequestException;
 import com.example.nexobank2.exception.NotFoundException;
@@ -13,8 +14,10 @@ import com.example.nexobank2.exception.TokenExpiredException;
 import com.example.nexobank2.repository.PassportRepository;
 import com.example.nexobank2.repository.UserRepository;
 import com.example.nexobank2.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.mapstruct.Named;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +26,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final PassportRepository passportRepository;
-    private final EmailServiceImpl emailService;
-    private final AccountServiceImpl accountService;
+    private final PasswordEncoder encoder;
+    private final ApplicationEventPublisher eventPublisher;
     @Transactional
     @Override
     public User save(User entity) {
@@ -50,7 +52,7 @@ public class UserServiceImpl implements UserService {
         if (user.getActivationTokenExpiresAt().isBefore(LocalDateTime.now())){
             throw new TokenExpiredException("Срок действия токена истек");
         }
-        user.setPasswordHash(password);
+        user.setPasswordHash(encoder.encode(password));
         user.setAcToken(null);
         user.setActivationTokenExpiresAt(null);
         if (user.getUserType() == UserType.EMPLOYEE){
