@@ -16,6 +16,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,9 +57,7 @@ public class ClientController {
     }
     @GetMapping("/findByUserId")
     public ResponseEntity<ClientResponse> findByUserId(@RequestParam @Min(1) Long userId){
-        return clientServiceImpl.findByUserId(userId)
-                .map(client -> ResponseEntity.ok(clientMapper.toResponse(client)))
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(clientMapper.toResponse(clientServiceImpl.findByUserId(userId)));
     }
     @GetMapping("/findByDateRange")
     public ResponseEntity<List<ClientResponse>> findByDateRange(@RequestParam @NotNull ClientStatus status, @RequestParam @NotNull LocalDateTime startDate, @RequestParam @NotNull LocalDateTime endDate){
