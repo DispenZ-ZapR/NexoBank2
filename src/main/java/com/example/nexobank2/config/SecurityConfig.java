@@ -27,6 +27,7 @@ public class SecurityConfig {
                         .requestMatchers("/scalar/**","/v3/api-docs/**","/api/client/save","/api/employees/save","/api/user/verify/**","/api/auth/**").permitAll()
                         .requestMatchers("/api/client/getMyProfile").hasRole("CLIENT")
                         .requestMatchers("/api/client/**","/api/employees/**").hasAnyRole("EMPLOYEE","ADMIN")
+                        .requestMatchers("/api/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -36,7 +37,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
