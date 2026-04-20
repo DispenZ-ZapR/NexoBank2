@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClientService {
-    List<Client> findAll(ClientStatus status);
+    List<Client> findAll(ClientStatus status, int page, int size);
     Client save(Client entity);
     Client findById(Long id);
     void deleteById(Long id);

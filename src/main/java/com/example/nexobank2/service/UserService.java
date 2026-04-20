@@ -16,7 +16,7 @@ public interface UserService{
     User save(User entity);
     void delete(User id);
     User findById(Long id);
-    List<User> findAll();
+    List<User> findAll(int page, int size);
 
     User findByActivationToken(String token);
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface OperationService {
     Operation transfer (TransactionRequest request, User initiator);
     Operation getByUUID (UUID uuid);
-    List<Operation> getByAll();
+    List<Operation> getAll(int page, int size);
     List<Operation> findByInitiatorId(Long id);
     List<Operation> findByStatus(OperationStatus status);
     List<Operation> getMyOperations(Long userId);

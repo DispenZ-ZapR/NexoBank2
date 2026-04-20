@@ -23,7 +23,7 @@ public interface EmployeeService {
     Employee save(Employee entity);
     void deleteById(Long id);
     Employee findById(Long id);
-    List<Employee> findAll();
+    List<Employee> findAll(int page, int size);
 
     Employee getMyProfile(Long userId);
 }
