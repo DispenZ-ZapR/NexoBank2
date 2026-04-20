@@ -1,4 +1,4 @@
-package com.example.nexobank2.Controller;
+package com.example.nexobank2.controller;
 
 import com.example.nexobank2.dto.ErrorResponse;
 import com.example.nexobank2.dto.ValidationErrorResponse;
