@@ -14,6 +14,8 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     List<Client> findByCreatedAt(LocalDateTime createdAt);
     List<Client> findByClientStatus(ClientStatus clientStatus);
     Optional<Client> findByUserId(Long userId);
+    Page<Client> findByClientStatus(ClientStatus clientStatus, Pageable pageable);
+
     
     List<Client> findByClientStatusAndCreatedAtBetween(ClientStatus status, LocalDateTime startDate, LocalDateTime endDate);
 
