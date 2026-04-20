@@ -8,22 +8,26 @@ import com.example.nexobank2.event.ClientCreatedEvent;
 import com.example.nexobank2.exception.NotFoundException;
 import com.example.nexobank2.repository.ClientRepository;
 import com.example.nexobank2.service.ClientService;
+import com.example.nexobank2.service.EmailService;
+import com.example.nexobank2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
-    private final PassportServiceImpl passportService;
-    private final UserServiceImpl userService;
-    private final EmailServiceImpl emailService;
+    private final UserService userService;
+    private final EmailService emailService;
     private final ApplicationEventPublisher eventPublisher;
 @Override
 public List<Client> findAll(ClientStatus status, int page, int size) {
