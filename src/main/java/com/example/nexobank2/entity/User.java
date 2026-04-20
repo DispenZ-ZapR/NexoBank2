@@ -18,7 +18,10 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes =
+        {
+                @Index(name = "idx_users_created_at", columnList = "created_at"),@Index(name = "idx_users_email", columnList = "email"),
+                @Index(name = "idx_users_phone_number", columnList = "phone_number"),})
 public class User extends BaseEntity implements UserDetails {
     @NotNull
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

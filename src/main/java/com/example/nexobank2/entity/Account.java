@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "account")
+@Table(name = "account", indexes = @Index(name = "idx_accounts_account_number", columnList = "account_number"))
 public class Account extends BaseEntity{
     @NotNull
     @ColumnDefault("now()")
