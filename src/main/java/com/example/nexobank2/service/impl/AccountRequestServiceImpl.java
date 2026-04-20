@@ -8,33 +8,44 @@ import com.example.nexobank2.exception.NotFoundException;
 import com.example.nexobank2.exception.RequestProcessed;
 import com.example.nexobank2.exception.UnverifiedException;
 import com.example.nexobank2.repository.AccountRequestRepository;
-import com.example.nexobank2.service.AccountRequestService;
+import com.example.nexobank2.service.*;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class AccountRequestServiceImpl implements AccountRequestService {
     
     private final AccountRequestRepository accountRequestRepository;
-    private final ClientServiceImpl clientService;
-    private final EmployeeServiceImpl employeeService;
-    private final AccountServiceImpl accountService;
-    private final EmailServiceImpl emailService;
+    private final ClientService clientService;
+    private final EmployeeService employeeService;
+    private final AccountService accountService;
+    private final EmailService emailService;
+    private final SecureRandom secureRandom = new SecureRandom();
     
-    @Override
-    public List<AccountRequest> findAll() {
-        return accountRequestRepository.findAll();
-    }
-    
+@Override
+public List<AccountRequest> findAll(int page, int size) {
+    Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+    Page<AccountRequest> accountRequests = accountRequestRepository.findAll(pageable);
+    return accountRequests.getContent();
+}
+
     @Override
     @Transactional
-    public AccountRequest save(AccountRequest entity) {
+    public AccountRequest
+    save(AccountRequest entity) {
         return accountRequestRepository.save(entity);
     }
     
@@ -61,7 +72,6 @@ public class AccountRequestServiceImpl implements AccountRequestService {
         AccountRequest request = new AccountRequest();
         request.setClient(client);
         
-        // Получаем AccountType и Currency через accountService
         AccountType accountType = new AccountType();
         accountType.setId(accountTypeId);
         request.setAccountType(accountType);
@@ -96,7 +106,6 @@ public class AccountRequestServiceImpl implements AccountRequestService {
             throw new RequestProcessed("Заявка уже обработана");
         }
         
-        // Создаем счет
         Account account = new Account();
         account.setClient(request.getClient());
         account.setAccountType(request.getAccountType());
@@ -190,6 +199,24 @@ public class AccountRequestServiceImpl implements AccountRequestService {
     
     // Генерация номера счета
     private String generateAccountNumber() {
-        return "KG" + System.currentTimeMillis() + (int)(Math.random() * 1000);
+        String accountNumber;
+        int attempts = 0;
+        final int MAX_ATTEMPTS = 10;
+        
+        do {
+            // Используем SecureRandom для криптографически стойкой генерации
+            long timestamp = System.currentTimeMillis();
+            int randomPart = secureRandom.nextInt(10000); // 0-9999
+            accountNumber = String.format("KG%d%04d", timestamp, randomPart);
+            
+            attempts++;
+            if (attempts >= MAX_ATTEMPTS) {
+                log.error("Не удалось сгенерировать уникальный номер счета после {} попыток", MAX_ATTEMPTS);
+                throw new RuntimeException("Не удалось сгенерировать уникальный номер счета");
+            }
+        } while (accountService.existsByAccountNumber(accountNumber));
+        
+        log.debug("Сгенерирован номер счета: {} (попыток: {})", accountNumber, attempts);
+        return accountNumber;
     }
 }
