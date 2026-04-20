@@ -1,4 +1,4 @@
-package com.example.nexobank2.Controller;
+package com.example.nexobank2.controller;
 
 import com.example.nexobank2.dto.AccountRequestRequest;
 import com.example.nexobank2.dto.AccountRequestResponse;
@@ -6,7 +6,7 @@ import com.example.nexobank2.entity.AccountRequest;
 import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.AccountRequestStatus;
 import com.example.nexobank2.mapper.AccountRequestMapper;
-import com.example.nexobank2.service.impl.AccountRequestServiceImpl;
+import com.example.nexobank2.service.AccountRequestService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -29,7 +29,7 @@ import java.util.List;
 @Tag(name = "Account Request", description = "Управление заявками на открытие счетов")
 public class AccountRequestController {
     
-    private final AccountRequestServiceImpl accountRequestService;
+    private final AccountRequestService accountRequestService;
     private final AccountRequestMapper accountRequestMapper;
     
     @PostMapping
@@ -46,8 +46,8 @@ public class AccountRequestController {
     
     @GetMapping
     @Operation(summary = "Получить все заявки")
-    public ResponseEntity<List<AccountRequestResponse>> getAllRequests() {
-        List<AccountRequest> requests = accountRequestService.findAll();
+    public ResponseEntity<List<AccountRequestResponse>> getAllRequests(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        List<AccountRequest> requests = accountRequestService.findAll(page,size);
         return ResponseEntity.ok(accountRequestMapper.toResponseList(requests));
     }
     

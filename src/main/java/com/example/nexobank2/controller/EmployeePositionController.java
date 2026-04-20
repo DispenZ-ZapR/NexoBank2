@@ -1,8 +1,7 @@
-package com.example.nexobank2.Controller;
+package com.example.nexobank2.controller;
 
 import com.example.nexobank2.dto.EmployeePositionRequest;
 import com.example.nexobank2.dto.EmployeePositionResponse;
-import com.example.nexobank2.entity.EmployeePosition;
 import com.example.nexobank2.mapper.EmployeePositionMapper;
 import com.example.nexobank2.service.impl.PositionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,7 +38,7 @@ public class EmployeePositionController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<EmployeePositionResponse>> get() {
-        return ResponseEntity.ok(mapper.toResponseList(service.findAll()));
+    public ResponseEntity<List<EmployeePositionResponse>> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(mapper.toResponseList(service.findAll(page, size)));
     }
 }

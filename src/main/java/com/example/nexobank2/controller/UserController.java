@@ -1,6 +1,5 @@
-package com.example.nexobank2.Controller;
+package com.example.nexobank2.controller;
 
-import com.example.nexobank2.dto.UserRequest;
 import com.example.nexobank2.dto.UserResponse;
 import com.example.nexobank2.dto.recordDto.ActivationAccount;
 import com.example.nexobank2.dto.recordDto.AuthResponse;
@@ -10,9 +9,8 @@ import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.UserType;
 import com.example.nexobank2.mapper.UserMapper;
 
+import com.example.nexobank2.service.UserService;
 import com.example.nexobank2.service.impl.JwtService;
-import com.example.nexobank2.service.impl.UserServiceImpl;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -31,7 +29,7 @@ import java.util.List;
 @Tag(name = "Контроллер пользователей")
 @Validated
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final UserMapper userMapper;
     private final JwtService jwtService;
     @PostMapping("/verify/{token}")
@@ -46,8 +44,8 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toResponse(userService.findById(id)));
     }
     @GetMapping("/all")
-    public ResponseEntity<?> getAll(){
-        return ResponseEntity.ok(userMapper.toUserResponseList(userService.findAll()));
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(userMapper.toUserResponseList(userService.findAll(page,size)));
     }
     @GetMapping("/getByEmail")
     public ResponseEntity<UserResponse> getByEmail(@RequestParam @NotBlank String email){

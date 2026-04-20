@@ -1,4 +1,4 @@
-package com.example.nexobank2.Controller;
+package com.example.nexobank2.controller;
 
 import com.example.nexobank2.dto.OperationResponse;
 import com.example.nexobank2.dto.TransactionRequest;
@@ -8,12 +8,8 @@ import com.example.nexobank2.enums.OperationStatus;
 import com.example.nexobank2.mapper.OperationMapper;
 import com.example.nexobank2.service.OperationService;
 import com.example.nexobank2.service.TransactionService;
-import com.example.nexobank2.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +33,8 @@ public class OperationController {
 
     @GetMapping
     @io.swagger.v3.oas.annotations.Operation(summary = "Получить все операции")
-    public ResponseEntity<List<OperationResponse>> getAllOperations() {
-        List<Operation> operations = operationService.getByAll();
+    public ResponseEntity<List<OperationResponse>> getAllOperations(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        List<Operation> operations = operationService.getAll(page,size);
         List<OperationResponse> responses = operations.stream()
                 .map(op -> operationMapper.toResponse(op, transactionService.findByOperationId(op.getId())))
                 .toList();

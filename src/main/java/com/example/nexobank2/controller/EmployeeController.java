@@ -1,13 +1,11 @@
-package com.example.nexobank2.Controller;
+package com.example.nexobank2.controller;
 
 import com.example.nexobank2.dto.EmployeeRequest;
 import com.example.nexobank2.dto.EmployeeResponse;
-import com.example.nexobank2.entity.Employee;
 import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.EmployeeStatus;
 import com.example.nexobank2.mapper.EmployeeMapper;
 import com.example.nexobank2.service.EmployeeService;
-import com.example.nexobank2.service.impl.EmployeeServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -26,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Validated
 public class EmployeeController {
-    private final EmployeeServiceImpl employeeService;
+    private final EmployeeService employeeService;
     private final EmployeeMapper employeeMapper;
 
     @PostMapping("/save")
@@ -63,8 +61,8 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeMapper.toResponse(employeeService.getUserById(id)));
     }
     @GetMapping("/getAll")
-    public ResponseEntity<List<EmployeeResponse>> getAll() {
-        return ResponseEntity.ok(employeeMapper.toResponseList(employeeService.findAll()));
+    public ResponseEntity<List<EmployeeResponse>> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(employeeMapper.toResponseList(employeeService.findAll(page,size)));
     }
     @GetMapping("/getByEmployeeStatus")
     public ResponseEntity<List<EmployeeResponse>> getByEmployeeStatus(@RequestParam @NotNull EmployeeStatus employeeStatus) {

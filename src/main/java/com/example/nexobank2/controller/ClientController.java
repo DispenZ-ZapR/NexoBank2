@@ -1,18 +1,16 @@
-package com.example.nexobank2.Controller;
+package com.example.nexobank2.controller;
 
 import com.example.nexobank2.dto.ClientRequest;
 import com.example.nexobank2.dto.ClientResponse;
-import com.example.nexobank2.dto.UserRequest;
+
 import com.example.nexobank2.entity.Client;
 import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.ClientStatus;
 import com.example.nexobank2.mapper.ClientMapper;
-import com.example.nexobank2.mapper.UserMapper;
 import com.example.nexobank2.service.impl.ClientServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,6 @@ import java.util.List;
 public class ClientController {
     private final ClientMapper clientMapper;
     private final ClientServiceImpl clientServiceImpl;
-    private final UserMapper userMapper;
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody @Valid ClientRequest request){
         Client client = clientMapper.toEntity(request);
@@ -39,8 +36,8 @@ public class ClientController {
         return ResponseEntity.ok("Аккаунт создан! на вашу почту был отправлен код, пожалуйста, подтвердите аккаунт");
     }
     @GetMapping("/getAll")
-    public ResponseEntity<List<ClientResponse>> getAll(@RequestParam @NotNull ClientStatus status){
-        return ResponseEntity.ok(clientMapper.toResponseList(clientServiceImpl.findAll(status)));
+    public ResponseEntity<List<ClientResponse>> getAll(@RequestParam @NotNull ClientStatus status, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(clientMapper.toResponseList(clientServiceImpl.findAll(status, page, size)));
     }
     @GetMapping("/getBy/{id}")
     public ResponseEntity<ClientResponse> getById(@PathVariable @Min(1) Long id){

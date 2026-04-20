@@ -1,4 +1,4 @@
-package com.example.nexobank2.Controller;
+package com.example.nexobank2.controller;
 
 import com.example.nexobank2.dto.AccountResponse;
 import com.example.nexobank2.entity.Account;
@@ -11,7 +11,6 @@ import com.example.nexobank2.service.impl.AccountServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +34,8 @@ public class AccountController {
     
     @GetMapping
     @Operation(summary = "Получить все счета")
-    public ResponseEntity<List<AccountResponse>> getAllAccounts() {
-        List<Account> accounts = accountService.findAll();
+    public ResponseEntity<List<AccountResponse>> getAllAccounts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size ) {
+        List<Account> accounts = accountService.findAll(page,size);
         return ResponseEntity.ok(accountMapper.toResponseList(accounts));
     }
     
