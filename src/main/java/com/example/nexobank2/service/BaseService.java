@@ -8,5 +8,5 @@ public interface BaseService <T extends BaseEntity>{
     T save(T entity);
     void deleteById(Long id);
     T findById(Long id);
-    List<T> findAll();
+    List<T> findAll(int page, int size);
 }
