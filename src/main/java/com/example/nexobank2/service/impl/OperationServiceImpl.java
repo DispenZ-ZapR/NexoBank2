@@ -76,7 +76,15 @@ public Operation transfer(TransactionRequest request, User initiator) {
         operationRepository.save(operation);
 
         return operation;
-    } catch (Exception e) {
+    } catch (BadRequestException | NotFoundException e) {
+        operation.setStatus(OperationStatus.FAILED);
+        operationRepository.save(operation);
+        throw e;
+    } catch (DataAccessException e) {
+        operation.setStatus(OperationStatus.FAILED);
+        operationRepository.save(operation);
+        throw new ServerErrorException("Ошибка при выполнении перевода: проблема с базой данных" + e.getMessage());
+    } catch (RuntimeException e) {
         operation.setStatus(OperationStatus.FAILED);
         operationRepository.save(operation);
         throw new ServerErrorException("Ошибка при выполнении перевода: " + e.getMessage());
