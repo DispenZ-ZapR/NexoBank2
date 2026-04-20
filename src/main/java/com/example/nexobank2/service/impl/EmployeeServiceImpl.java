@@ -7,8 +7,14 @@ import com.example.nexobank2.enums.EmployeeStatus;
 import com.example.nexobank2.exception.NotFoundException;
 import com.example.nexobank2.repository.EmployeePositionRepository;
 import com.example.nexobank2.repository.EmployeeRepository;
+import com.example.nexobank2.service.EmailService;
 import com.example.nexobank2.service.EmployeeService;
+import com.example.nexobank2.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +28,8 @@ import java.util.stream.Collectors;
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmployeePositionRepository positionRepository;
-    private final UserServiceImpl userService;
-    private final EmailServiceImpl emailService;
+    private final UserService userService;
+    private final EmailService emailService;
 
     @Override
     public Employee getByUserEmail(String email) {
