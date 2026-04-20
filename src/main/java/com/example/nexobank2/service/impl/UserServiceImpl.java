@@ -77,8 +77,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll().stream().filter(user -> user.getDeletedAt() == null).toList();
+    public List<User> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<User> userPage = userRepository.findAll(pageable);
+        List<User> filteredUsers = userPage.getContent().stream().filter(user -> user.getDeletedAt() == null).toList();
+        return filteredUsers;
     }
 
     @Named("findById")

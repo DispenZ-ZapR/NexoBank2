@@ -60,8 +60,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> findAll() {
-        return transactionRepository.findAll();
+    public List<Transaction> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Transaction> transactions = transactionRepository.findAll(pageable);
+        return transactions.getContent();
     }
 
     @Override

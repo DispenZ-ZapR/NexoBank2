@@ -15,25 +15,34 @@ import com.example.nexobank2.repository.AccountRequestRepository;
 import com.example.nexobank2.repository.AccountTypeRepository;
 import com.example.nexobank2.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Named;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
-    private final AccountRequestRepository accountRequestRepository;
     private final AccountTypeRepository accountTypeRepository;
     private final AccountCurrencyRepository accountCurrencyRepository;
+    private final SecureRandom secureRandom = new SecureRandom();
     @Override
-    public List<Account> findAll() {
-        return accountRepository.findAll();
+    public List<Account> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Account> accountPage = accountRepository.findAll(pageable);
+        return accountPage.getContent();
     }
     @Override
     @Named("findByIdAc")
@@ -164,9 +173,22 @@ public class AccountServiceImpl implements AccountService {
 
     private String generateAccountNumber() {
         String accountNumber;
+        int attempts = 0;
+        final int MAX_ATTEMPTS = 10;
+        
         do {
-            accountNumber = "KG" + System.currentTimeMillis() + (int)(Math.random() * 1000);
+            long timestamp = System.currentTimeMillis();
+            int randomPart = secureRandom.nextInt(10000); // 0-9999
+            accountNumber = String.format("KG%d%04d", timestamp, randomPart);
+            
+            attempts++;
+            if (attempts >= MAX_ATTEMPTS) {
+                log.error("Не удалось сгенерировать уникальный номер счета после {} попыток", MAX_ATTEMPTS);
+                throw new RuntimeException("Не удалось сгенерировать уникальный номер счета");
+            }
         } while (existsByAccountNumber(accountNumber));
+        
+        log.debug("Сгенерирован номер счета: {} (попыток: {})", accountNumber, attempts);
         return accountNumber;
     }
 

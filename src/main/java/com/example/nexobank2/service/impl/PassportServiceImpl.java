@@ -17,8 +17,10 @@ public class PassportServiceImpl implements PassportService {
    private final PassportRepository passportRepository;
 
     @Override
-    public List<Passport> findAll() {
-        return passportRepository.findAll();
+    public List<Passport> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Passport> passports = passportRepository.findAll(pageable);
+        return passports.getContent();
     }
 
     @Override

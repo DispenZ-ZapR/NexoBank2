@@ -33,7 +33,9 @@ public class PositionService implements EmployeePositionService  {
     }
 
     @Override
-    public List<EmployeePosition> findAll() {
-        return repository.findAll();
+    public List<EmployeePosition> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<EmployeePosition> positionPage = repository.findAll(pageable);
+        return positionPage.getContent();
     }
 }

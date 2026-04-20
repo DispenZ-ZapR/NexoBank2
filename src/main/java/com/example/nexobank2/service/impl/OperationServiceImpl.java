@@ -88,8 +88,10 @@ public Operation transfer(TransactionRequest request, User initiator) {
         return operationRepository.findByInitiatorIdOrderByCreatedAtDesc(userId);
     }
     @Override
-    public List<Operation> getByAll() {
-        return operationRepository.findAll();
+    public List<Operation> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Operation> operations = operationRepository.findAll(pageable);
+        return operations.getContent();
     }
 
     public Operation save(Operation operation) {

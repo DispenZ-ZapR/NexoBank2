@@ -25,11 +25,12 @@ public class ClientServiceImpl implements ClientService {
     private final UserServiceImpl userService;
     private final EmailServiceImpl emailService;
     private final ApplicationEventPublisher eventPublisher;
-    @Override
-    public List<Client> findAll(ClientStatus status) {
-        return clientRepository.findByClientStatus(status);
-    }
-
+@Override
+public List<Client> findAll(ClientStatus status, int page, int size) {
+    Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+    Page<Client> clients = clientRepository.findByClientStatus(status, pageable);
+    return clients.getContent();
+}
     @Override
     @Transactional
     public Client save(Client entity) {
