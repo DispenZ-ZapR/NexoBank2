@@ -7,6 +7,10 @@ import com.example.nexobank2.repository.EmployeePositionRepository;
 import com.example.nexobank2.service.EmployeePositionService;
 import lombok.AllArgsConstructor;
 import org.mapstruct.Named;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
