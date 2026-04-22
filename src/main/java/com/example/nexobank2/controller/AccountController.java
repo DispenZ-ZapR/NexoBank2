@@ -6,8 +6,8 @@ import com.example.nexobank2.entity.Client;
 import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.AccountStatus;
 import com.example.nexobank2.mapper.AccountMapper;
+import com.example.nexobank2.service.AccountService;
 import com.example.nexobank2.service.ClientService;
-import com.example.nexobank2.service.impl.AccountServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
@@ -28,7 +28,7 @@ import java.util.List;
 @Validated
 public class AccountController {
     
-    private final AccountServiceImpl accountService;
+    private final AccountService accountService;
     private final AccountMapper accountMapper;
     private final ClientService clientService;
     

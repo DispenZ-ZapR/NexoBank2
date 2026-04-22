@@ -7,7 +7,7 @@ import com.example.nexobank2.entity.Client;
 import com.example.nexobank2.entity.User;
 import com.example.nexobank2.enums.ClientStatus;
 import com.example.nexobank2.mapper.ClientMapper;
-import com.example.nexobank2.service.impl.ClientServiceImpl;
+import com.example.nexobank2.service.ClientService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -28,7 +28,7 @@ import java.util.List;
 @Validated
 public class ClientController {
     private final ClientMapper clientMapper;
-    private final ClientServiceImpl clientServiceImpl;
+    private final ClientService clientServiceImpl;
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody @Valid ClientRequest request){
         Client client = clientMapper.toEntity(request);
