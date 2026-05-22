@@ -6,9 +6,6 @@ import lombok.Data;
 @Data
 public class AccountRequestRequest {
     
-    @NotNull(message = "ID клиента обязателен")
-    private Long clientId;
-    
     @NotNull(message = "ID типа счета обязателен")
     private Long accountTypeId;
     
