@@ -61,6 +61,15 @@ public Operation transfer(TransactionRequest request, User initiator) {
     if (request.getFromAccountId().equals(request.getToAccountId())) {
         throw new BadRequestException("Нельзя переводить на тот же счет");
     }
+    
+    if (!fromAccount.getStatus().name().equals("ACTIVE")) {
+        throw new BadRequestException("Счёт отправителя заблокирован или неактивен. Статус: " + fromAccount.getStatus());
+    }
+    
+    if (!toAccount.getStatus().name().equals("ACTIVE")) {
+        throw new BadRequestException("Счёт получателя заблокирован или неактивен. Статус: " + toAccount.getStatus());
+    }
+    
     Operation operation = new Operation();
     operation.setInitiator(initiator);
     operation.setChannel("WEB");
