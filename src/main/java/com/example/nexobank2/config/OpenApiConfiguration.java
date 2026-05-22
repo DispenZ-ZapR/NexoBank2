@@ -11,8 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
         version = "1.0",
         description = "API documentation for NexoBank"
 ))
-@SecurityRequirement(name = "BearerAuth")
-@SecurityScheme(name = "BearerAuth",
+@SecurityScheme(name = "bearerAuth",
         description = "JWT token",
         scheme = "bearer",
         type = SecuritySchemeType.HTTP,
