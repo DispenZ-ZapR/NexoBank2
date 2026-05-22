@@ -12,7 +12,6 @@ import java.util.List;
 public interface AccountRequestMapper {
     
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "client.id", source = "clientId")
     @Mapping(target = "accountType.id", source = "accountTypeId")
     @Mapping(target = "currency.id", source = "currencyId")
     @Mapping(target = "status", ignore = true)
