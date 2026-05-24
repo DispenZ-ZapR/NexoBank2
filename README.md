@@ -183,24 +183,33 @@ http://localhost:8080/swagger-ui.html
 
 **1. Регистрация клиента:**
 ```bash
-curl -X POST http://localhost:8080/api/clients \
+curl -X POST http://localhost:8080/api/client\save \
   -H "Content-Type: application/json" \
   -d '{
-    "passport": {
-      "firstName": "Иван",
-      "lastName": "Петров",
-      "middleName": "Сергеевич",
-      "dateOfBirth": "1990-01-15",
-      "personalNumber": "12345678901234",
-      "passportNumber": "AN1234567"
-    },
     "email": "ivan@example.com",
     "phoneNumber": "+996555123456",
-    "password": "SecurePassword123"
+    "firstName": "Иван",
+    "lastName": "Петров",
+    "middleName": "Сергеевич",
+    "dateOfBirth": "1990-01-15",
+    "personalNumber": "12345678901234",
+    "passportNumber": "AN1234567"
   }'
 ```
 
-**2. Вход в систему:**
+**Важно:** После регистрации на указанную почту придет ссылка для активации аккаунта. Перейдите по ссылке и установите пароль.
+
+**2. Активация аккаунта (установка пароля):**
+```bash
+curl -X POST http://localhost:8080/api/user/verify/{token} \
+  -H "Content-Type: application/json" \
+  -d '{
+    "password": "SecurePassword123"
+  }'
+```
+Где `{token}` - это токен из ссылки, полученной на email.
+
+**3. Вход в систему:**
 ```bash
 curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
@@ -217,7 +226,7 @@ curl -X POST http://localhost:8080/api/auth/login \
 }
 ```
 
-**3. Получение списка счетов (требуется токен):**
+**4. Получение списка счетов (требуется токен):**
 ```bash
 curl -X GET http://localhost:8080/api/accounts \
   -H "Authorization: Bearer ваш_токен"
