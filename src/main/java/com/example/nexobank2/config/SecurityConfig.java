@@ -38,13 +38,14 @@ public class SecurityConfig {
                     "/swagger-ui.html",
                     "/v3/api-docs/**",
                     "/api/auth/**",
-                    "/api/client/save",
                     "/api/employees/save",
+                    "/api/client/save",
                     "/api/user/verify/**"
                 ).permitAll()
                 .requestMatchers("/api/client/getMyProfile","/api/account-requests/createRequest","/api/operations/transfer").hasRole("CLIENT")
                 .requestMatchers("/api/accounts/myAccounts", "/api/operations/my", "/api/account-requests/myClient").hasAnyRole("CLIENT", "EMPLOYEE", "ADMIN")
-                .requestMatchers("/api/client/**", "/api/employees/**").hasAnyRole("EMPLOYEE", "ADMIN")
+                .requestMatchers("/api/client/**", "/api/employees/**").hasAnyRole(
+                        "EMPLOYEE", "ADMIN")
                 .requestMatchers("/api/accounts/**", "/api/operations/**", "/api/account-requests/**").hasAnyRole("EMPLOYEE", "ADMIN")
                 .anyRequest().authenticated()
             )
