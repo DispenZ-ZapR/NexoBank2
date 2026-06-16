@@ -34,6 +34,8 @@ public class AccountRequestServiceImpl implements AccountRequestService {
     private final AccountService accountService;
     private final EmailService emailService;
     private final SecureRandom secureRandom = new SecureRandom();
+    private final AccountTypeService accountTypeService;
+    private final AccountCurrencyService accountCurrencyService;
     
 @Override
 public List<AccountRequest> findAll(int page, int size) {
@@ -74,10 +76,12 @@ public List<AccountRequest> findAll(int page, int size) {
         
         AccountType accountType = new AccountType();
         accountType.setId(accountTypeId);
+        accountType.setName(accountTypeService.findById(accountTypeId).getName());
         request.setAccountType(accountType);
         
         AccountCurrency currency = new AccountCurrency();
         currency.setId(currencyId);
+        currency.setName(accountCurrencyService.findById(currencyId).getName());
         request.setCurrency(currency);
         
         request.setStatus(AccountRequestStatus.PENDING);
@@ -85,7 +89,6 @@ public List<AccountRequest> findAll(int page, int size) {
         
         AccountRequest savedRequest = accountRequestRepository.save(request);
         
-        // Отправка уведомления клиенту
         emailService.sendSimpleMessage(
                 client.getUser().getEmail(),
                 "Заявка на открытие счета принята",
@@ -123,7 +126,6 @@ public List<AccountRequest> findAll(int page, int size) {
         
         AccountRequest updatedRequest = accountRequestRepository.save(request);
         
-        // Отправка уведомления клиенту
         emailService.sendSimpleMessage(
                 request.getClient().getUser().getEmail(),
                 "Заявка на открытие счета одобрена",
@@ -163,7 +165,6 @@ public List<AccountRequest> findAll(int page, int size) {
         
         accountRequestRepository.save(request);
         
-        // Отправка уведомления клиенту
         emailService.sendSimpleMessage(
                 request.getClient().getUser().getEmail(),
                 "Заявка на открытие счета отклонена",
@@ -197,14 +198,12 @@ public List<AccountRequest> findAll(int page, int size) {
         return accountRequestRepository.findByApprovedById(employeeId);
     }
     
-    // Генерация номера счета
     private String generateAccountNumber() {
         String accountNumber;
         int attempts = 0;
         final int MAX_ATTEMPTS = 10;
         
         do {
-            // Используем SecureRandom для криптографически стойкой генерации
             long timestamp = System.currentTimeMillis();
             int randomPart = secureRandom.nextInt(10000); // 0-9999
             accountNumber = String.format("KG%d%04d", timestamp, randomPart);
