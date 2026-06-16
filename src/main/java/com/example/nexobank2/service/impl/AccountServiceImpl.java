@@ -118,6 +118,18 @@ public class AccountServiceImpl implements AccountService {
         if (toAccount.getStatus() != AccountStatus.ACTIVE) {
             throw new BadRequestException("Счет получателя не активен");
         }
+        if (fromAccount.getId().equals(toAccount.getId())) {
+            throw new BadRequestException("Нельзя перевести деньги самому себе");
+        }
+        if (!fromAccount.getCurrency().getId().equals(toAccount.getCurrency().getId())) {
+            throw new BadRequestException(
+                String.format("Перевод возможен только между счетами в одной валюте. Счет отправителя: %s, счет получателя: %s",
+                    fromAccount.getCurrency().getCode(),
+
+                    toAccount.getCurrency().getCode())
+            );
+        }
+        
         if (fromAccount.getBalance().compareTo(amount) < 0) {
             throw new BadRequestException("Недостаточно средств");
         }
