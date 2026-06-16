@@ -11,6 +11,7 @@ import org.springframework.jmx.export.annotation.ManagedAttribute;
 @Mapper
 public interface PassportMapper {
     @Mapping(target = "isLost", constant = "false")
+    @Mapping(target = "id", ignore = true)
     Passport toEntity(UserRequest request);
     @Mapping(target = "lost", source = "isLost")
     PassportResponse toResponse(Passport passport);

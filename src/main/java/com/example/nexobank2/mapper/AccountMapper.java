@@ -10,6 +10,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "accountType.id", source = "accountTypeId")
     @Mapping(target = "currency.id", source = "currencyId")
     @Mapping(target = "balance", constant = "0")
