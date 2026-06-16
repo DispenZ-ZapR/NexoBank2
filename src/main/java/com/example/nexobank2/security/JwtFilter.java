@@ -37,8 +37,6 @@ public class JwtFilter extends OncePerRequestFilter {
             }
             
             String token = authHeader.substring(7);
-            log.debug("Extracted token: {}...", token.substring(0, Math.min(20, token.length())));
-            
             if(!jwtService.validateToken(token)){
                 log.warn("Token validation failed");
                 filterChain.doFilter(request,response);
