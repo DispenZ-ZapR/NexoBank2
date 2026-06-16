@@ -28,6 +28,7 @@ public interface AccountRequestMapper {
     @Mapping(target = "currencyId", source = "currency.id")
     @Mapping(target = "currencyName", source = "currency.name")
     @Mapping(target = "approvedByEmployeeId", source = "approvedBy.id")
+    @Mapping(source = "id", target = "id")
     @Mapping(target = "approvedByEmployeeName", expression = "java(getEmployeeFullName(accountRequest))")
     AccountRequestResponse toResponse(AccountRequest accountRequest);
     
