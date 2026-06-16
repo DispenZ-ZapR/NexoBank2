@@ -145,8 +145,8 @@ public class AccountRequestController {
     })
     public ResponseEntity<AccountRequestResponse> approveRequest(
             @Parameter(description = "ID заявки", required = true) @PathVariable @Min(1) Long id,
-            @Parameter(description = "ID сотрудника, одобряющего заявку", required = true) @RequestParam @Min(1) Long employeeId) {
-        AccountRequest request = accountRequestService.approveRequest(id, employeeId);
+            @Parameter(description = "ID сотрудника, одобряющего заявку", required = true) @AuthenticationPrincipal User user) {
+        AccountRequest request = accountRequestService.approveRequest(id, user.getEmployee().getId());
         return ResponseEntity.ok(accountRequestMapper.toResponse(request));
     }
     
