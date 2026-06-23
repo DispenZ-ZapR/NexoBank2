@@ -1,10 +1,15 @@
 package com.example.nexobank2.service.impl;
 
+import com.example.nexobank2.entity.AccountRequest;
 import com.example.nexobank2.entity.AccountType;
 import com.example.nexobank2.exception.NotFoundException;
 import com.example.nexobank2.repository.AccountTypeRepository;
 import com.example.nexobank2.service.AccountTypeService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +34,8 @@ public class AccountTypeServiceImpl implements AccountTypeService {
 
     @Override
     public List<AccountType> findAll(int page, int size) {
-        return repository.findAll();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<AccountType> accountRequests = repository.findAll(pageable);
+        return accountRequests.getContent();
     }
 }

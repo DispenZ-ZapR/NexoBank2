@@ -27,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/employees")
-@Tag(name = "Сотрудники", description = "API для управления сотрудниками банка")
+@Tag(name = "Управление персоналом", description = "API для управления персоналом банка")
 @SecurityRequirement(name = "bearerAuth")
 @AllArgsConstructor
 @Validated
